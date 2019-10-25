@@ -4,6 +4,7 @@ import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.example.paradabackend.repositories.DriverRepository;
+import javassist.NotFoundException;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,29 @@ public class DriverServiceTest {
         Driver foundDriver = driverService.save(driver);
 
         MatcherAssert.assertThat(driver, is(foundDriver));
+    }
+
+    @Test
+    public void should_return_driver_profile() throws NotFoundException {
+        Driver driver = new Driver("kg96");
+        driver.setPassword("password");
+        driver.setFirstName("Kenneth");
+        driver.setLastName("Garcia");
+        driver.setEmail("john.kenneth.garcia@oocl.com");
+        driver.setMobileNumber("09123456789");
+        driver.setEmailVerificationStatus("True");
+        driver.setProfilePicture("www.google.com");
+        when(driverRepository.findByUsername("kg96")).thenReturn(driver);
+
+
+        Driver foundDriver = driverService.findDriverProfile("kg96");
+
+        MatcherAssert.assertThat(driver, is(foundDriver));
+    }
+
+    @Test
+    public void should_throw_Not_Found_Exception_if_username_is_null() {
+        assertThrows(NotFoundException.class, () ->
+                driverService.findDriverProfile(null));
     }
 }
