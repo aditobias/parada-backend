@@ -1,8 +1,8 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.DriverService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,17 +39,21 @@ public class DriverControllerTest {
     public void should_get_Driver_by_username_and_password() throws Exception {
         Driver driver = new Driver("driver");
         driver.setPassword("password");
-        when(driverService.findByUsernameAndPassword("driver", "password")).thenReturn(driver);
+        driver.setFirstName("Gray");
 
-        ResultActions result = mvc.perform(get("/drivers")
+        when(driverService.findByUsernameAndPassword(new DriverCredentials("driver", "password")))
+                .thenReturn(driver);
+
+        ResultActions result = mvc.perform(post("/drivers/credentials")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(driver))
+                .content(objectMapper.writeValueAsString(new DriverCredentials("driver", "password")))
         );
 
         result.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.username", is("driver")))
-                .andExpect(jsonPath("$.password", is("password")));
+                .andExpect(jsonPath("$.password", is("password")))
+                .andExpect(jsonPath("$.firstName", is("Gray")));
     }
 
     @Test
