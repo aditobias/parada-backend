@@ -8,14 +8,12 @@ pipeline {
                }
             }
         }
-        stage('Unit Test') {
+        stage('Deploy Test') {
             steps {
                script {
-                   try {
-                       bat './gradlew clean test --no-daemon' //run a gradle task
-                   } finally {
-                       junit '**/build/test-results/test/*.xml' //make the junit test results available in any case (success & failure)
-                   }
+                   sh: step 1 put jar file to pc2 share folder
+                   step 2 put bat file in pc2
+                   step 3 trigger bat in pc2
                }
             }
         }
