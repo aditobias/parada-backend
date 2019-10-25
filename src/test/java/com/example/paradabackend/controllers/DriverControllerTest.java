@@ -4,6 +4,7 @@ import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.DriverService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -76,4 +82,51 @@ public class DriverControllerTest {
                 .andExpect(jsonPath("$.firstName", is("Gray")))
         ;
     }
+
+
+    @Test
+    public void should_get_a_particular_Driver_profile() throws Exception {
+        Driver driver = new Driver("kg96");
+        driver.setPassword("password");
+        driver.setFirstName("Kenneth");
+        driver.setLastName("Garcia");
+        driver.setEmail("john.kenneth.garcia@oocl.com");
+        driver.setMobileNumber("09123456789");
+        driver.setEmailVerificationStatus("True");
+        driver.setProfilePicture("www.google.com");
+
+
+        when(driverService.findDriverProfile("kg96")).thenReturn(driver);
+
+        ResultActions result = mvc.perform(get("/drivers/kg96"));
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.username", is("kg96")))
+                .andExpect(jsonPath("$.password", is("password")))
+                .andExpect(jsonPath("$.firstName", is("Kenneth")))
+        ;
+    }
+
+    @Test
+    public void should_get_error_not_found_when_a_particular_Driver_profile_is_null() throws Exception {
+        Driver driver = new Driver("kg96");
+        driver.setPassword("password");
+        driver.setFirstName("Kenneth");
+        driver.setLastName("Garcia");
+        driver.setEmail("john.kenneth.garcia@oocl.com");
+        driver.setMobileNumber("09123456789");
+        driver.setEmailVerificationStatus("True");
+        driver.setProfilePicture("www.google.com");
+
+        doThrow(NotFoundException.class).when(driverService).findDriverProfile("kg96");
+
+        ResultActions result = mvc.perform(get("/drivers/kg96")
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(driver))
+        );
+
+        result.andExpect(status().isNotFound());
+    }
+
 }
