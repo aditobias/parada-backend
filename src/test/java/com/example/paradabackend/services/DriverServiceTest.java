@@ -1,6 +1,7 @@
 package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.Driver;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.example.paradabackend.repositories.DriverRepository;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -20,13 +21,32 @@ public class DriverServiceTest {
     private DriverRepository driverRepository;
 
     @Test
-    public void should_find_Driver_by_userName_and_password() {
+    public void should_find_Driver_by_username_and_password() {
         Driver driver = new Driver("driver");
         driver.setPassword("password");
         driver.setFirstName("jed");
-        when(driverRepository.findByUserNameAndPassword("driver", "password")).thenReturn(driver);
+        when(driverRepository.findByUsernameAndPassword("driver", "password")).thenReturn(driver);
 
-        Driver foundDriver = driverService.findByUserNameAndPassword("driver", "password");
+        Driver foundDriver = driverService.findByUsernameAndPassword("driver", "password");
+
+        MatcherAssert.assertThat(driver, is(foundDriver));
+    }
+
+    @Test
+    public void should_throw_Exception_if_invalid_login_credentials() {
+        assertThrows(IllegalArgumentException.class, () ->
+                driverService.findByUsernameAndPassword("invalid", "invalid"));
+    }
+
+    @Test
+    public void should_post_new_Driver() {
+        Driver driver = new Driver("driver");
+        driver.setPassword("password");
+        driver.setFirstName("jed");
+
+        when(driverRepository.save(driver)).thenReturn(driver);
+
+        Driver foundDriver = driverService.save(driver);
 
         MatcherAssert.assertThat(driver, is(foundDriver));
     }

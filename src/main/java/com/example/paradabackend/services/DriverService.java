@@ -10,7 +10,15 @@ public class DriverService {
     @Autowired
     private DriverRepository driverRepository;
 
-    public Driver findByUserNameAndPassword(String userName, String password) {
-         return driverRepository.findByUserNameAndPassword(userName, password);
+    public Driver findByUsernameAndPassword(String username, String password) {
+        Driver foundDriver = driverRepository.findByUsernameAndPassword(username, password);
+        if (foundDriver == null ) {
+            throw new IllegalArgumentException("Wrong username or password");
+        }
+        return foundDriver;
+    }
+
+    public Driver save(Driver driver) {
+        return driverRepository.save(driver);
     }
 }

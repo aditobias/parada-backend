@@ -7,7 +7,8 @@ import java.util.Objects;
 @Entity
 public class Driver {
     @Id
-    private String userName;
+    private String username;
+
     private String password;
     private String firstName;
     private String lastName;
@@ -19,16 +20,16 @@ public class Driver {
     public Driver() {
     }
 
-    public Driver(String userName) {
-        this.userName = userName;
+    public Driver(String username) {
+        this.username = username;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -92,7 +93,7 @@ public class Driver {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Driver driver = (Driver) o;
-        return Objects.equals(userName, driver.userName) &&
+        return Objects.equals(username, driver.username) &&
                 Objects.equals(password, driver.password) &&
                 Objects.equals(firstName, driver.firstName) &&
                 Objects.equals(lastName, driver.lastName) &&
@@ -104,6 +105,6 @@ public class Driver {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, password, firstName, lastName, email, mobileNumber, emailVerificationStatus, profilePicture);
+        return Objects.hash(username, password, firstName, lastName, email, mobileNumber, emailVerificationStatus, profilePicture);
     }
 }
