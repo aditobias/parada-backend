@@ -19,6 +19,8 @@ build/
 *.iws
 *.iml
 *.ipr
+*.db
+*.log
 out/
 
 ### NetBeans ###
