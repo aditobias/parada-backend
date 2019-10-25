@@ -9,13 +9,11 @@ pipeline {
             }
         }
         stage('Deploy Test') {
-            steps {
-               script {
-                   sh: step 1 put jar file to pc2 share folder
-                   step 2 put bat file in pc2
-                   step 3 trigger bat in pc2
-               }
-            }
-        }
+                    steps {
+                       script {
+                            bat 'D:/LOCAL_REPO/PsExec.exe //itapair06-w10 C:/Users/alvariy/Desktop/PROD_REPO/executeBat.bat' //run a gradle task
+                       }
+                    }
+                }
     }
 }
