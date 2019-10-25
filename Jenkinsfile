@@ -8,5 +8,12 @@ pipeline {
                }
             }
         }
+        stage('Deploy Test') {
+                    steps {
+                       script {
+                            bat 'D:/LOCAL_REPO/PsExec.exe //itapair06-w10 C:/Users/alvariy/Desktop/PROD_REPO/executeBat.bat' //run a gradle task
+                       }
+                    }
+                }
     }
 }
