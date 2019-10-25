@@ -35,10 +35,10 @@ public class DriverControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void should_get_Driver_by_userName_and_password() throws Exception {
+    public void should_get_Driver_by_username_and_password() throws Exception {
         Driver driver = new Driver("driver");
         driver.setPassword("password");
-        when(driverService.findByUserNameAndPassword("driver", "password")).thenReturn(driver);
+        when(driverService.findByUsernameAndPassword("driver", "password")).thenReturn(driver);
 
         ResultActions result = mvc.perform(get("/drivers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -47,7 +47,7 @@ public class DriverControllerTest {
 
         result.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.userName", is("driver")))
+                .andExpect(jsonPath("$.username", is("driver")))
                 .andExpect(jsonPath("$.password", is("password")));
     }
 }

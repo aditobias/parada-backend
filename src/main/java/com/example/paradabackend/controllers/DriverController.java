@@ -15,8 +15,8 @@ public class DriverController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Driver getDriverByUserNameAndPassword(@RequestBody Driver driver) {
-        return driverService.findByUserNameAndPassword(driver.getUserName(), driver.getPassword());
+    public Driver getDriverByUsernameAndPassword(@RequestBody Driver driver) {
+        return driverService.findByUsernameAndPassword(driver.getUsername(), driver.getPassword());
     }
 
 }

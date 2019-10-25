@@ -21,13 +21,13 @@ public class DriverServiceTest {
     private DriverRepository driverRepository;
 
     @Test
-    public void should_find_Driver_by_userName_and_password() {
+    public void should_find_Driver_by_username_and_password() {
         Driver driver = new Driver("driver");
         driver.setPassword("password");
         driver.setFirstName("jed");
-        when(driverRepository.findByUserNameAndPassword("driver", "password")).thenReturn(driver);
+        when(driverRepository.findByUsernameAndPassword("driver", "password")).thenReturn(driver);
 
-        Driver foundDriver = driverService.findByUserNameAndPassword("driver", "password");
+        Driver foundDriver = driverService.findByUsernameAndPassword("driver", "password");
 
         MatcherAssert.assertThat(driver, is(foundDriver));
     }
@@ -35,6 +35,6 @@ public class DriverServiceTest {
     @Test
     public void should_throw_Exception_if_invalid_login_credentials() {
         assertThrows(IllegalArgumentException.class, () ->
-                driverService.findByUserNameAndPassword("invalid", "invalid"));
+                driverService.findByUsernameAndPassword("invalid", "invalid"));
     }
 }
