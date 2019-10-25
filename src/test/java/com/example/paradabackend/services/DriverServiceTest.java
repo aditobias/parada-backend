@@ -37,4 +37,17 @@ public class DriverServiceTest {
         assertThrows(IllegalArgumentException.class, () ->
                 driverService.findByUsernameAndPassword("invalid", "invalid"));
     }
+
+    @Test
+    public void should_post_new_Driver() {
+        Driver driver = new Driver("driver");
+        driver.setPassword("password");
+        driver.setFirstName("jed");
+
+        when(driverRepository.save(driver)).thenReturn(driver);
+
+        Driver foundDriver = driverService.save(driver);
+
+        MatcherAssert.assertThat(driver, is(foundDriver));
+    }
 }

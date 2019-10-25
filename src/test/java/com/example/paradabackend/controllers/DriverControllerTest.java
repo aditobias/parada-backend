@@ -2,6 +2,7 @@ package com.example.paradabackend.controllers;
 
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.DriverService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,5 +51,26 @@ public class DriverControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.username", is("driver")))
                 .andExpect(jsonPath("$.password", is("password")));
+    }
+
+    @Test
+    public void should_post_Driver() throws Exception {
+        Driver driver = new Driver("driver");
+        driver.setPassword("password");
+        driver.setFirstName("Gray");
+
+        when(driverService.save(driver)).thenReturn(driver);
+
+        ResultActions result = mvc.perform(post("/drivers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(driver))
+        );
+
+        result.andExpect(status().isCreated())
+                .andDo(print())
+                .andExpect(jsonPath("$.username", is("driver")))
+                .andExpect(jsonPath("$.password", is("password")))
+                .andExpect(jsonPath("$.firstName", is("Gray")))
+        ;
     }
 }

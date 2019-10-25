@@ -19,4 +19,9 @@ public class DriverController {
         return driverService.findByUsernameAndPassword(driver.getUsername(), driver.getPassword());
     }
 
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Driver postNewDriver(@RequestBody Driver driver) {
+        return driverService.save(driver);
+    }
 }
