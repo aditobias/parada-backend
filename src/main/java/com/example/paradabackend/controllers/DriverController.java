@@ -1,5 +1,6 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ public class DriverController {
     @Autowired
     private DriverService driverService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/credentials", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
-    public Driver getDriverByUsernameAndPassword(@RequestBody Driver driver) {
-        return driverService.findByUsernameAndPassword(driver.getUsername(), driver.getPassword());
+    public Driver loginByUsernameAndPassword(@RequestBody DriverCredentials driverCredentials) {
+        return driverService.findByUsernameAndPassword(driverCredentials);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
