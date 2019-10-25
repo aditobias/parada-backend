@@ -1,6 +1,7 @@
 package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.Driver;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.example.paradabackend.repositories.DriverRepository;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -29,5 +30,11 @@ public class DriverServiceTest {
         Driver foundDriver = driverService.findByUserNameAndPassword("driver", "password");
 
         MatcherAssert.assertThat(driver, is(foundDriver));
+    }
+
+    @Test
+    public void should_throw_Exception_if_invalid_login_credentials() {
+        assertThrows(IllegalArgumentException.class, () ->
+                driverService.findByUserNameAndPassword("invalid", "invalid"));
     }
 }

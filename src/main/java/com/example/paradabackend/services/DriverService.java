@@ -11,6 +11,10 @@ public class DriverService {
     private DriverRepository driverRepository;
 
     public Driver findByUserNameAndPassword(String userName, String password) {
-         return driverRepository.findByUserNameAndPassword(userName, password);
+        Driver foundDriver = driverRepository.findByUserNameAndPassword(userName, password);
+        if (foundDriver == null ) {
+            throw new IllegalArgumentException("Wrong username or password");
+        }
+        return foundDriver;
     }
 }
