@@ -1,9 +1,7 @@
 package com.example.paradabackend.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,6 +15,9 @@ public class ParkingLot {
     private Integer flatRate;
     private Integer ratePerHour;
     private Integer succeedingHourRate;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<ParkingSpace> parkingSpaceList;
 
     public Integer getId() {
         return id;
@@ -70,8 +71,16 @@ public class ParkingLot {
         return succeedingHourRate;
     }
 
-    public void setSucceedingHoursRate(Integer succeedingHourRate) {
+    public void setSucceedingHourRate(Integer succeedingHourRate) {
         this.succeedingHourRate = succeedingHourRate;
+    }
+
+    public List<ParkingSpace> getParkingSpaceList() {
+        return parkingSpaceList;
+    }
+
+    public void setParkingSpaceList(List<ParkingSpace> parkingSpaceList) {
+        this.parkingSpaceList = parkingSpaceList;
     }
 
     @Override

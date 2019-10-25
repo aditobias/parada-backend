@@ -61,6 +61,23 @@ public class ParkingLotServiceTest {
                 parkingLotService.addParkingLot(null));
     }
 
+    @Test
+    void should_show_specific_parking_lot_when_input_parking_lot() throws NotFoundException {
+        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+
+        when(parkingLotRepository.findByParkingLotName("ParkingLot Test")).thenReturn(myParkingLot);
+
+        ParkingLot parkingLotResult = parkingLotService.findSpecificParkingLot("ParkingLot Test");
+
+        assertEquals(parkingLotResult, myParkingLot);
+    }
+
+    @Test
+    void should_NOT_show_specific_parking_lot_when_no_input() {
+        assertThrows(NotFoundException.class, () ->
+                parkingLotService.findSpecificParkingLot(null));
+    }
+
     private ParkingLot dummyParkingLot(String name) {
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setParkingLotName(name);
@@ -68,7 +85,7 @@ public class ParkingLotServiceTest {
         parkingLot.setCapacity(2);
         parkingLot.setFlatRate(50);
         parkingLot.setRatePerHour(50);
-        parkingLot.setSucceedingHoursRate(15);
+        parkingLot.setSucceedingHourRate(15);
 
         return parkingLot;
     }
