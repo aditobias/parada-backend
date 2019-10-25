@@ -3,6 +3,7 @@ package com.example.paradabackend.controllers;
 import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.DriverService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,5 +25,11 @@ public class DriverController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public Driver postNewDriver(@RequestBody Driver driver) {
         return driverService.save(driver);
+    }
+
+    @GetMapping(value="/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Driver getDriversProfile(@PathVariable String username) throws NotFoundException {
+        return driverService.findDriverProfile(username);
     }
 }
