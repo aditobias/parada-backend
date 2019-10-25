@@ -3,7 +3,6 @@ package com.example.paradabackend.services;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.repositories.DriverRepository;
 import javassist.NotFoundException;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
