@@ -24,4 +24,10 @@ public class DriverController {
     public Driver postNewDriver(@RequestBody Driver driver) {
         return driverService.save(driver);
     }
+
+    @GetMapping(value="/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Driver getDriversProfile(@PathVariable String username) {
+        return driverService.findDriverProfile(username);
+    }
 }
