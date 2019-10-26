@@ -17,14 +17,14 @@ public class ParkingLotController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ParkingLot addParkingLot(@RequestBody ParkingLot parkingLot) throws NotFoundException {
+    public ParkingLot addParkingLot(@RequestBody ParkingLot parkingLot) throws Exception {
         return parkingLotService.addParkingLot(parkingLot);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Iterable<ParkingLot> showAllParkingLot(@RequestParam(defaultValue = "0", required = false) Integer page,
-                                                  @RequestParam(defaultValue = "2", required = false) Integer pageSize) {
+                                                  @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         return parkingLotService.findAllParkingLot(page, pageSize);
     }
 

@@ -1,6 +1,7 @@
 package com.example.paradabackend.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,8 +19,8 @@ public class ParkingLot {
     private Integer ratePerHour;
     private Integer succeedingHourRate;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<ParkingSpace> parkingSpaceList;
+    @OneToMany(cascade = CascadeType.MERGE)
+    private List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
     public Integer getId() {
         return id;
