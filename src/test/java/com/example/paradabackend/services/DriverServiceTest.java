@@ -2,7 +2,6 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.example.paradabackend.repositories.DriverRepository;
 import javassist.NotFoundException;
 import org.hamcrest.MatcherAssert;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest

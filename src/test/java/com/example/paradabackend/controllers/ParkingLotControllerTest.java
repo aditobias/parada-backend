@@ -1,7 +1,5 @@
 package com.example.paradabackend.controllers;
 
-import com.example.paradabackend.dtos.DriverCredentials;
-import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.services.ParkingLotService;
 import com.fasterxml.jackson.databind.ObjectMapper;
