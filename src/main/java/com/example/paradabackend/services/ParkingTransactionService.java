@@ -24,11 +24,13 @@ public class ParkingTransactionService {
     @Autowired
     ParkingLotRepository parkingLotRepository;
 
-    public ParkingTransaction addParkingTransaction( String parkingLotName ,String parkingSpaceID , ParkingTransaction parkingTransaction ) {
+    private ParkingSpace parkingSpace;
 
-        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceID);
+    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId, ParkingTransaction parkingTransaction) {
 
-        if(parkingSpaceFound.isPresent()) {
+        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceId);
+
+        if (parkingSpaceFound.isPresent()) {
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
@@ -40,13 +42,13 @@ public class ParkingTransactionService {
 
             return parkingTransactionRepository.save(parkingTransaction);
         }
-     return null;
+        return null;
     }
 
 
     public ParkingTransaction findTransactionById(long id) {
         Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(id);
-        if ( !parkingTransaction.isPresent()) {
+        if (!parkingTransaction.isPresent()) {
             throw new IllegalArgumentException("No transaction found!");
         }
         return parkingTransaction.get();

@@ -11,19 +11,25 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/parkingLots/{parkingLotName}/parkingSpace/{parkingSpaceId}")
+@RequestMapping("/parkingLots/{parkingLotName}/transactions")
 public class ParkingTransactionController {
 
     @Autowired
     ParkingTransactionService parkingTransactionService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/parkingSpace/{parkingSpaceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParkingTransaction addNewParkingTransaction(@PathVariable String parkingLotName,
                                                        @PathVariable String parkingSpaceId,
                                                        @RequestBody ParkingTransaction parkingTransaction) throws NotFoundException {
         return parkingTransactionService.addParkingTransaction( parkingLotName , parkingSpaceId , parkingTransaction );
 
+    }
+
+    @GetMapping(path = "/{transactionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ParkingTransaction showParkingTransactionById(@PathVariable Long transactionId) {
+        return parkingTransactionService.findTransactionById(transactionId);
     }
 
 }
