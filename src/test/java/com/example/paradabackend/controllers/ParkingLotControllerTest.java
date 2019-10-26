@@ -1,5 +1,7 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.dtos.DriverCredentials;
+import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.services.ParkingLotService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +25,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,4 +87,19 @@ public class ParkingLotControllerTest {
         resultOfExecution.andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].parkingLotName", is("ParkingLotTest")));
     }
+
+    @Test
+    public void should_show_specific_parking_lot() throws Exception {
+        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+
+        when(parkingLotService.findSpecificParkingLot("ParkingLot Test"))
+                .thenReturn(myParkingLot);
+
+        ResultActions result = mvc.perform(get("/parkingLots/{parkingLotName}", "ParkingLot Test"));
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.parkingLotName", is("ParkingLot Test")));
+    }
+
 }

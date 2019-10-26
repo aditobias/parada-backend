@@ -4,7 +4,9 @@ import com.example.paradabackend.entities.ParkingSpace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, String> {
+import java.util.List;
 
+@Repository
+public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Integer> {
+    List<ParkingSpace> findAllByParkingLotName(String parkingLotName);
 }

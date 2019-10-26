@@ -10,26 +10,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ParkingSpaceServiceTest {
 
     @Autowired
-    ParkingSpaceService parkingSpaceService;
+    private ParkingSpaceService parkingSpaceService;
 
     @MockBean
-    ParkingSpaceRepository parkingSpaceRepository;
+    private ParkingSpaceRepository parkingSpaceRepository;
 
     @MockBean
-    ParkingLotRepository parkingLotRepository;
+    private ParkingLotRepository parkingLotRepository;
 
     private ParkingSpace dummyParkingSpace(String id, String parkingLotName) {
         ParkingSpace parkingSpace = new ParkingSpace();
@@ -67,23 +69,23 @@ class ParkingSpaceServiceTest {
     }
 
     @Test
-    void should_NOT_add_new_parking_space_when_added_new_detail() throws NotFoundException {
+    void should_NOT_add_new_parking_space_when_added_new_detail() {
         assertThrows(NotFoundException.class, () ->
                 parkingSpaceService.addNewParkingSpace(null, null));
     }
 
     @Test
-    void should_update_to_is_occupied_when_parking_space_reserved() {
-        ParkingSpace parkingSpace = new ParkingSpace();
-        parkingSpace.setId("123");
-        parkingSpace.setOccupied(true);
+    void should_find_all_parking_spaces_for_a_particular_parking_lot() {
+        String parkingLotName = "ParkingLot Test";
+        List<ParkingSpace> parkingSpaceList = Arrays.asList(
+                new ParkingSpace(),
+                new ParkingSpace(),
+                new ParkingSpace()
+        );
+        when(parkingSpaceRepository.findAllByParkingLotName(parkingLotName)).thenReturn(parkingSpaceList);
 
-        when(parkingSpaceRepository.save(parkingSpace)).thenReturn(parkingSpace);
-        when(parkingSpaceRepository.findById(anyString())).thenReturn(Optional.of(parkingSpace));
+        List<ParkingSpace> resultingParkingSpaceList = parkingSpaceService.findAllByParkingLotName(parkingLotName);
 
-        ParkingSpace parkingSpaceOccupied = parkingSpaceService.updateToIsOccupiedWhenReserved("123" , parkingSpace);
-
-        assertEquals(parkingSpace, parkingSpaceOccupied);
-
+        assertThat(resultingParkingSpaceList, hasSize(parkingSpaceList.size()));
     }
 }
