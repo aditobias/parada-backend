@@ -16,12 +16,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,6 +71,24 @@ public class ParkingSpaceControllerTest {
     }
 
     @Test
+    void should_show_all_parking_spaces_when_in_specific_parking_lot() throws Exception {
+        List<ParkingSpace> parkingSpace = Arrays.asList(
+                dummyParkingSpace("ParkingLotTest1"),
+                dummyParkingSpace("ParkingLotTest1")
+        );
+
+        when(parkingSpaceService.findAllByParkingLotName("ParkingLotTest")).thenReturn(parkingSpace);
+
+        ResultActions resultOfExecution = mvc.perform(get("/parkingLots/{parkingLotName}/parkingSpace",
+                "ParkingLostTest")
+                .content(objectMapper.writeValueAsString(parkingSpace))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        resultOfExecution.andExpect(status().isOk());
+    }
+
+    @Test
     void should_update_specific_parking_lot_space_when_parking_lot_space_is_occupied() throws Exception {
         ParkingSpace parkingSpace = new ParkingSpace();
         parkingSpace.setOccupied(true);
@@ -82,10 +101,10 @@ public class ParkingSpaceControllerTest {
                 .thenReturn(parkingSpace);
 
         ResultActions resultOfExecution = mvc.perform(patch("/parkingLots/parkingLot/parkingSpace")
-                                                        .accept(MediaType.APPLICATION_JSON)
-                                                        .contentType(MediaType.APPLICATION_JSON)
-                                                        .content(objectMapper.writeValueAsString(oldParkingSpace)));
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(oldParkingSpace)));
         resultOfExecution.andExpect(status().isOk())
-                            .andExpect(jsonPath("$.occupied", is(true)));
+                .andExpect(jsonPath("$.occupied", is(true)));
     }
 }
