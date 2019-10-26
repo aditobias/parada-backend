@@ -89,7 +89,7 @@ public class ParkingLotControllerTest {
     }
 
     @Test
-    public void should_get_Driver_by_username_and_password() throws Exception {
+    public void should_show_specific_parking_lot() throws Exception {
         ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
 
         when(parkingLotService.findSpecificParkingLot("ParkingLot Test"))
