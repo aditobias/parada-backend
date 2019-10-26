@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -77,4 +78,12 @@ public class ParkingSpaceService {
 
         return parkingLotNameBuilder;
     }
+
+    public ParkingSpace updateToIsOccupiedWhenReserved(String id, ParkingSpace parkingSpace) {
+        ParkingSpace parkingSpaceToOccupy = parkingSpaceRepository.findById(id).get();
+        parkingSpaceToOccupy.setOccupied(parkingSpace.isOccupied());
+        return parkingSpaceRepository.save(parkingSpaceToOccupy);
+
+    }
+
 }

@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 
 @Entity
 public class ParkingSpace {
+
     @Id
     private String id;
     private String parkingLotName;

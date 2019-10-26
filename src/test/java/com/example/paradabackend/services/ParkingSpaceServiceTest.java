@@ -11,10 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -68,5 +70,20 @@ class ParkingSpaceServiceTest {
     void should_NOT_add_new_parking_space_when_added_new_detail() throws NotFoundException {
         assertThrows(NotFoundException.class, () ->
                 parkingSpaceService.addNewParkingSpace(null, null));
+    }
+
+    @Test
+    void should_update_to_is_occupied_when_parking_space_reserved() {
+        ParkingSpace parkingSpace = new ParkingSpace();
+        parkingSpace.setId("123");
+        parkingSpace.setOccupied(true);
+
+        when(parkingSpaceRepository.save(parkingSpace)).thenReturn(parkingSpace);
+        when(parkingSpaceRepository.findById(anyString())).thenReturn(Optional.of(parkingSpace));
+
+        ParkingSpace parkingSpaceOccupied = parkingSpaceService.updateToIsOccupiedWhenReserved("123" , parkingSpace);
+
+        assertEquals(parkingSpace, parkingSpaceOccupied);
+
     }
 }
