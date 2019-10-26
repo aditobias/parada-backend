@@ -8,5 +8,12 @@ pipeline {
                }
             }
         }
+        stage('Build') {
+            steps {
+               script {
+                    bat './gradlew bootRun' //run a gradle task
+               }
+            }
+        }
     }
 }
