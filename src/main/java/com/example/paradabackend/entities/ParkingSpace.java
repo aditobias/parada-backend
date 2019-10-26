@@ -1,6 +1,5 @@
 package com.example.paradabackend.entities;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
@@ -12,7 +11,6 @@ public class ParkingSpace {
     private String id;
     private String parkingLotName;
     private Integer parkingLevel;
-    @Column(unique = true)
     private String parkingPosition;
     private Boolean isOccupied;
     private Timestamp reserveTime;

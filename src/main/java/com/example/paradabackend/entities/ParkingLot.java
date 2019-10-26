@@ -9,6 +9,7 @@ public class ParkingLot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Column(unique = true)
     private String parkingLotName;
     private String location;
     private Integer capacity;
