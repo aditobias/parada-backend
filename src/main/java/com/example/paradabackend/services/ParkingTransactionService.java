@@ -1,10 +1,19 @@
 package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.Driver;
+import com.example.paradabackend.entities.ParkingLot;
+import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
+import com.example.paradabackend.repositories.ParkingLotRepository;
+import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.util.Optional;
 
 @Service
 public class ParkingTransactionService {
@@ -12,7 +21,31 @@ public class ParkingTransactionService {
     @Autowired
     ParkingTransactionRepository parkingTransactionRepository;
 
-    public ParkingTransaction addParkingTransaction(ParkingTransaction parkingTransaction) {
-        return parkingTransactionRepository.save(parkingTransaction);
+    @Autowired
+    ParkingSpaceRepository parkingSpaceRepository;
+
+    @Autowired
+    ParkingLotRepository parkingLotRepository;
+
+    public ParkingTransaction addParkingTransaction( String parkingLotName ,String parkingSpaceID , ParkingTransaction parkingTransaction ) {
+        parkingTransaction.setUsername("Gray");
+
+        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceID);
+
+        if(parkingSpaceFound.isPresent()) {
+            parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
+            parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
+            parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
+            parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
+            ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
+            parkingTransaction.setPrice(parkingLot.getFlatRate());
+            parkingTransaction.setVoided("NotVoided");
+            parkingTransaction.setCreationDateTime(new Timestamp(System.currentTimeMillis()));
+
+            return parkingTransactionRepository.save(parkingTransaction);
+        }
+     return null;
     }
+
+
 }

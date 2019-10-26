@@ -20,6 +20,10 @@ public class ParkingTransaction {
     private Integer price;
     private String voided;
     private Timestamp creationDateTime;
+
+    public ParkingTransaction() {
+    }
+
     private Timestamp closedDateTime;
     private String isPaid;
 
