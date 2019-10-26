@@ -1,29 +1,28 @@
 package com.example.paradabackend.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
 public class ParkingSpace {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private String id;
     private String parkingLotName;
     private Integer parkingLevel;
-    private boolean isOccupied;
+    @Column(unique = true)
+    private String parkingPosition;
+    private Boolean isOccupied;
     private Timestamp reserveTime;
     private Timestamp startTime;
     private Timestamp endTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id ) {
         this.id = id;
     }
 
@@ -39,15 +38,23 @@ public class ParkingSpace {
         return parkingLevel;
     }
 
+    public void setParkingPosition(String parkingPosition) {
+        this.parkingPosition = parkingPosition;
+    }
+
+    public String getParkingPosition() {
+        return parkingPosition;
+    }
+
     public void setParkingLevel(Integer parkingLevel) {
         this.parkingLevel = parkingLevel;
     }
 
-    public boolean isOccupied() {
+    public Boolean isOccupied() {
         return isOccupied;
     }
 
-    public void setOccupied(boolean occupied) {
+    public void setOccupied(Boolean occupied) {
         isOccupied = occupied;
     }
 
