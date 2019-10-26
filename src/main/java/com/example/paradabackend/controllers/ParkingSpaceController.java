@@ -28,4 +28,15 @@ public class ParkingSpaceController {
 
         return parkingSpaceService.addNewParkingSpace(parkingLot, parkingSpace);
     }
+
+    @PatchMapping(value="" ,
+            consumes = {"application/json"})
+    public ParkingSpace updateParkingSpace(@PathVariable String parkingLotName,
+                                           @RequestBody ParkingSpace parkingSpace){
+
+        ParkingSpace updateToOccupied = parkingSpaceService.
+                updateToIsOccupiedWhenReserved(parkingSpace);
+        return updateToOccupied;
+
+    }
 }

@@ -17,8 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -65,5 +69,23 @@ public class ParkingSpaceControllerTest {
         resultOfExecution.andExpect(status().isCreated());
     }
 
+    @Test
+    void should_update_specific_parking_lot_space_when_parking_lot_space_is_occupied() throws Exception {
+        ParkingSpace parkingSpace = new ParkingSpace();
+        parkingSpace.setOccupied(true);
+        parkingSpace.setId("parkingSpaceID");
 
+        ParkingLot parkingLot = new ParkingLot();
+
+        ParkingSpace oldParkingSpace = new ParkingSpace();
+        when(parkingSpaceService.updateToIsOccupiedWhenReserved(any()))
+                .thenReturn(parkingSpace);
+
+        ResultActions resultOfExecution = mvc.perform(patch("/parkingLots/parkingLot/parkingSpace")
+                                                        .accept(MediaType.APPLICATION_JSON)
+                                                        .contentType(MediaType.APPLICATION_JSON)
+                                                        .content(objectMapper.writeValueAsString(oldParkingSpace)));
+        resultOfExecution.andExpect(status().isOk())
+                            .andExpect(jsonPath("$.occupied", is(true)));
+    }
 }
