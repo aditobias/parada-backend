@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,6 +65,21 @@ public class ParkingTransactionServiceTest {
         ParkingTransaction foundTransaction = parkingTransactionService.findTransactionById(1L);
 
         MatcherAssert.assertThat(parkingTransaction, is(foundTransaction));
+
+    }
+
+    @Test
+    public void should_return_all_parking_transactions () {
+        List<ParkingTransaction> listOfTransactions = Arrays.asList(
+                new ParkingTransaction("Gray","ParkingLot1","1A1"),
+                new ParkingTransaction("Jeanne","ParkingLot2","1A2")
+        );
+
+        when(parkingTransactionRepository.findAll()).thenReturn(listOfTransactions);
+
+        List<ParkingTransaction>  foundTransaction = parkingTransactionService.findAllTransactions(listOfTransactions);
+
+        MatcherAssert.assertThat(listOfTransactions, is(foundTransaction));
 
     }
 }

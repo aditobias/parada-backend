@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,5 +53,9 @@ public class ParkingTransactionService {
             throw new IllegalArgumentException("No transaction found!");
         }
         return parkingTransaction.get();
+    }
+
+    public List<ParkingTransaction> findAllTransactions(List<ParkingTransaction> listOfTransactions) {
+        return parkingTransactionRepository.findAll();
     }
 }
