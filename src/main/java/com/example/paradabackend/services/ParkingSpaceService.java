@@ -37,6 +37,20 @@ public class ParkingSpaceService {
         return parkingSpace;
     }
 
+    public ParkingSpace updateToIsOccupiedWhenReserved(ParkingSpace parkingSpace) {
+        Optional<ParkingSpace> parkingSpaceToOccupy = parkingSpaceRepository.findById(parkingSpace.getId());
+
+        if(parkingSpaceToOccupy.isPresent()){
+            parkingSpaceToOccupy.get().setOccupied(true);
+            return parkingSpaceRepository.save(parkingSpaceToOccupy.get());
+        }
+        return null;
+    }
+
+    public List<ParkingSpace> findAllByParkingLotName(String parkingLotName) {
+        return parkingSpaceRepository.findAllByParkingLotName(parkingLotName);
+    }
+
     private void updateParkingLot(ParkingLot parkingLot, ParkingSpace parkingSpace) {
         List<ParkingSpace> updatedParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpace);
 
@@ -44,9 +58,9 @@ public class ParkingSpaceService {
                 .filter(ParkingSpace::isOccupied)
                 .count();
 
+        parkingLot.setCapacity(parkingLot.getCapacity() + 1);
         parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));
         parkingLot.setParkingSpaceList(updatedParkingSpaceList);
-        parkingLot.setCapacity(parkingLot.getCapacity() + 1);
 
         parkingLotRepository.save(parkingLot);
     }
@@ -60,8 +74,8 @@ public class ParkingSpaceService {
     }
 
     private void buildParkingSpaceContent(ParkingLot parkingLot, ParkingSpace parkingSpace) {
-        parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
         parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
+        parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
         parkingSpace.setOccupied(false);
     }
 
@@ -78,20 +92,6 @@ public class ParkingSpaceService {
                 parkingLotNameBuilder.append(c);
 
         return parkingLotNameBuilder;
-    }
-
-    public ParkingSpace updateToIsOccupiedWhenReserved(ParkingSpace parkingSpace) {
-        Optional<ParkingSpace> parkingSpaceToOccupy = parkingSpaceRepository.findById(parkingSpace.getId());
-
-        if(parkingSpaceToOccupy.isPresent()){
-            parkingSpaceToOccupy.get().setOccupied(true);
-            return parkingSpaceRepository.save(parkingSpaceToOccupy.get());
-        }
-        return null;
-    }
-
-    public List<ParkingSpace> findAllByParkingLotName(String parkingLotName) {
-        return parkingSpaceRepository.findAllByParkingLotName(parkingLotName);
     }
 
 }
