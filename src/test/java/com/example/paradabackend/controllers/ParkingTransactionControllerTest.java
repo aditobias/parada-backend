@@ -16,6 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -74,6 +77,22 @@ public class ParkingTransactionControllerTest {
         ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions/{transacionId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(parkingTransaction)));
+
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void should_get_all_transactions() throws Exception {
+        List<ParkingTransaction> listOfTransactions = Arrays.asList(
+                new ParkingTransaction("Gray","ParkingLot1","1A1"),
+                new ParkingTransaction("Jeanne","ParkingLot2","1A2")
+        );
+
+        when(parkingTransactionService.findAllTransactions(0,5)).thenReturn(listOfTransactions);
+
+        ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(listOfTransactions)));
 
         result.andExpect(status().isOk());
     }

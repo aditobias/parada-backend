@@ -7,6 +7,7 @@ import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -55,7 +56,7 @@ public class ParkingTransactionService {
         return parkingTransaction.get();
     }
 
-    public List<ParkingTransaction> findAllTransactions(List<ParkingTransaction> listOfTransactions) {
-        return parkingTransactionRepository.findAll();
+    public Iterable<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
+        return parkingTransactionRepository.findAll(PageRequest.of(page , pageSize));
     }
 }

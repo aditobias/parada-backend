@@ -77,7 +77,7 @@ public class ParkingTransactionServiceTest {
 
         when(parkingTransactionRepository.findAll()).thenReturn(listOfTransactions);
 
-        List<ParkingTransaction>  foundTransaction = parkingTransactionService.findAllTransactions(listOfTransactions);
+        Iterable<ParkingTransaction>  foundTransaction = parkingTransactionService.findAllTransactions(0,5);
 
         MatcherAssert.assertThat(listOfTransactions, is(foundTransaction));
 

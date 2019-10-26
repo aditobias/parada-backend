@@ -1,7 +1,5 @@
 package com.example.paradabackend.controllers;
 
-import com.example.paradabackend.entities.ParkingLot;
-import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.services.ParkingTransactionService;
 import javassist.NotFoundException;
@@ -30,6 +28,13 @@ public class ParkingTransactionController {
     @ResponseStatus(code = HttpStatus.OK)
     public ParkingTransaction showParkingTransactionById(@PathVariable Long transactionId) {
         return parkingTransactionService.findTransactionById(transactionId);
+    }
+
+    @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Iterable<ParkingTransaction> showAllParkingTransactions(@RequestParam(defaultValue = "0", required = false) Integer page,
+                                                           @RequestParam(defaultValue = "10", required = false) Integer pageSize){
+        return parkingTransactionService.findAllTransactions(page, pageSize);
     }
 
 }
