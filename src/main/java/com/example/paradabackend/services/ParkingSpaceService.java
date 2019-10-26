@@ -8,6 +8,9 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Objects.isNull;
 
 @Service
@@ -18,7 +21,6 @@ public class ParkingSpaceService {
 
     @Autowired
     ParkingLotRepository parkingLotRepository;
-
 
     public ParkingSpace addNewParkingSpace(ParkingLot parkingLot, ParkingSpace parkingSpace) throws NotFoundException {
 
@@ -35,9 +37,24 @@ public class ParkingSpaceService {
     }
 
     private void updateParkingLot(ParkingLot parkingLot, ParkingSpace parkingSpace) {
-        parkingLot.getParkingSpaceList().add(parkingSpace);
+        List<ParkingSpace> updatedParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpace);
+
+        Long occupiedParkingSpaces = parkingLot.getParkingSpaceList().stream().
+                filter(ParkingSpace::isOccupied).count();
+
+        parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));
+        parkingLot.setParkingSpaceList(updatedParkingSpaceList);
         parkingLot.setCapacity(parkingLot.getCapacity() + 1);
+
         parkingLotRepository.save(parkingLot);
+    }
+
+    private List<ParkingSpace> updateParkingSpaceList(ParkingLot parkingLot, ParkingSpace parkingSpace) {
+        List<ParkingSpace> updatedParkingSpaceList = new ArrayList<>();
+        updatedParkingSpaceList.addAll(parkingLot.getParkingSpaceList());
+        updatedParkingSpaceList.add(parkingSpace);
+
+        return updatedParkingSpaceList;
     }
 
     private void buildParkingSpaceContent(ParkingLot parkingLot, ParkingSpace parkingSpace) {
