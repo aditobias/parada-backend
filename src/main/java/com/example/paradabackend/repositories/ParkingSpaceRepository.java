@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Integer> {
+public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, String> {
     List<ParkingSpace> findAllByParkingLotName(String parkingLotName);
 }
