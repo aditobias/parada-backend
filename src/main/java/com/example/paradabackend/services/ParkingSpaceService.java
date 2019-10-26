@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -18,10 +17,10 @@ import static java.util.Objects.isNull;
 public class ParkingSpaceService {
 
     @Autowired
-    ParkingSpaceRepository parkingSpaceRepository;
+    private ParkingSpaceRepository parkingSpaceRepository;
 
     @Autowired
-    ParkingLotRepository parkingLotRepository;
+    private ParkingLotRepository parkingLotRepository;
 
     public ParkingSpace addNewParkingSpace(ParkingLot parkingLot, ParkingSpace parkingSpace) throws NotFoundException {
 
@@ -40,8 +39,9 @@ public class ParkingSpaceService {
     private void updateParkingLot(ParkingLot parkingLot, ParkingSpace parkingSpace) {
         List<ParkingSpace> updatedParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpace);
 
-        Long occupiedParkingSpaces = parkingLot.getParkingSpaceList().stream().
-                filter(ParkingSpace::isOccupied).count();
+        Long occupiedParkingSpaces = parkingLot.getParkingSpaceList().stream()
+                .filter(ParkingSpace::isOccupied)
+                .count();
 
         parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));
         parkingLot.setParkingSpaceList(updatedParkingSpaceList);
@@ -79,11 +79,7 @@ public class ParkingSpaceService {
         return parkingLotNameBuilder;
     }
 
-    public ParkingSpace updateToIsOccupiedWhenReserved(String id, ParkingSpace parkingSpace) {
-        ParkingSpace parkingSpaceToOccupy = parkingSpaceRepository.findById(id).get();
-        parkingSpaceToOccupy.setOccupied(parkingSpace.isOccupied());
-        return parkingSpaceRepository.save(parkingSpaceToOccupy);
-
+    public List<ParkingSpace> findAllByParkingLotName(String parkingLotName) {
+        return parkingSpaceRepository.findAllByParkingLotName(parkingLotName);
     }
-
 }
