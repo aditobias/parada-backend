@@ -28,4 +28,9 @@ public class ParkingLotController {
         return parkingLotService.findAllParkingLot(page, pageSize);
     }
 
+    @GetMapping(path = "/{parkingLotName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ParkingLot showSpecificParkingLot(@PathVariable String parkingLotName) throws NotFoundException {
+        return parkingLotService.findSpecificParkingLot(parkingLotName);
+    }
 }
