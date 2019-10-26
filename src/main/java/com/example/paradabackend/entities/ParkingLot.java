@@ -12,6 +12,7 @@ public class ParkingLot {
     private String parkingLotName;
     private String location;
     private Integer capacity;
+    private Integer availableSpaces;
     private Integer flatRate;
     private Integer ratePerHour;
     private Integer succeedingHourRate;
@@ -49,6 +50,14 @@ public class ParkingLot {
 
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    public Integer getAvailableSpaces() {
+        return availableSpaces;
+    }
+
+    public void setAvailableSpaces(Integer availableSpaces) {
+        this.availableSpaces = availableSpaces;
     }
 
     public Integer getFlatRate() {

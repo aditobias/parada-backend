@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 import static java.util.Objects.isNull;
 
 @Service
@@ -23,6 +25,8 @@ public class ParkingLotService {
         if (parkingLot == null) {
             throw new NotFoundException("Please complete all fields.");
         }
+
+        parkingLot.setParkingSpaceList(Collections.emptyList());
 
         return parkingLotRepository.save(parkingLot);
     }
