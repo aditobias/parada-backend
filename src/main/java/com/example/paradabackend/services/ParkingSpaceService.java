@@ -84,7 +84,7 @@ public class ParkingSpaceService {
         Optional<ParkingSpace> parkingSpaceToOccupy = parkingSpaceRepository.findById(parkingSpace.getId());
 
         if(parkingSpaceToOccupy.isPresent()){
-            parkingSpaceToOccupy.get().setOccupied(parkingSpace.isOccupied());
+            parkingSpaceToOccupy.get().setOccupied(true);
             return parkingSpaceRepository.save(parkingSpaceToOccupy.get());
         }
         return null;
