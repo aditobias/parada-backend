@@ -1,15 +1,12 @@
 package com.example.paradabackend.services;
 
-import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -47,4 +44,11 @@ public class ParkingTransactionService {
     }
 
 
+    public ParkingTransaction findTransactionById(long id) {
+        Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(id);
+        if ( !parkingTransaction.isPresent()) {
+            throw new IllegalArgumentException("No transaction found!");
+        }
+        return parkingTransaction.get();
+    }
 }

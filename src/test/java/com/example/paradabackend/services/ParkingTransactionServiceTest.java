@@ -52,5 +52,18 @@ public class ParkingTransactionServiceTest {
 
         assertThat(parkingTransaction, is(parkingTransactionAdded));
     }
+
+    @Test
+    public void should_find_transaction_by_id () {
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
+        parkingTransaction.setId(1L);
+
+        when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
+
+        ParkingTransaction foundTransaction = parkingTransactionService.findTransactionById(1L);
+
+        MatcherAssert.assertThat(parkingTransaction, is(foundTransaction));
+
+    }
 }
 
