@@ -24,7 +24,7 @@ public class ParkingLotController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Iterable<ParkingLot> showAllParkingLot(@RequestParam(defaultValue = "0", required = false) Integer page,
-                                                  @RequestParam(defaultValue = "2", required = false) Integer pageSize) {
+                                                  @RequestParam(defaultValue = "9", required = false) Integer pageSize) {
         return parkingLotService.findAllParkingLot(page, pageSize);
     }
 
