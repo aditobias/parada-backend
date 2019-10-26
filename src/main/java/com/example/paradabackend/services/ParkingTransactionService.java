@@ -28,7 +28,6 @@ public class ParkingTransactionService {
     ParkingLotRepository parkingLotRepository;
 
     public ParkingTransaction addParkingTransaction( String parkingLotName ,String parkingSpaceID , ParkingTransaction parkingTransaction ) {
-        parkingTransaction.setUsername("Gray");
 
         Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceID);
 

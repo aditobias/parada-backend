@@ -2,6 +2,7 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
+import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import javassist.NotFoundException;
@@ -87,6 +88,7 @@ public class ParkingSpaceService {
             parkingSpaceToOccupy.get().setOccupied(true);
             return parkingSpaceRepository.save(parkingSpaceToOccupy.get());
         }
+
         return null;
     }
 
