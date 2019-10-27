@@ -81,6 +81,17 @@ public class DriverControllerTest {
         ;
     }
 
+    @Test
+    public void should_not_post_driver_ifFound() throws Exception {
+        Driver driver = new Driver();
+        driver.setUsername("Tin");
+
+        when(driverService.save(driver)).thenThrow(new NotFoundException("Username already exist!"));
+        ResultActions result = mvc.perform(post("/drivers")
+                .contentType(MediaType.APPLICATION_JSON));
+        result.andExpect(status().isOk());
+    }
+
 
     @Test
     public void should_get_a_particular_Driver_profile() throws Exception {

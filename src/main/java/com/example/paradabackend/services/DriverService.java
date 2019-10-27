@@ -22,7 +22,11 @@ public class DriverService {
         return foundDriver;
     }
 
-    public Driver save(Driver driver) {
+    public Driver save(Driver driver) throws NotFoundException {
+        Driver checkIfUsernameExisting = driverRepository.findByUsername(driver.getUsername());
+        if (checkIfUsernameExisting != null) {
+            throw new IllegalArgumentException("Username already exist!");
+        }
         return driverRepository.save(driver);
     }
 
@@ -33,4 +37,6 @@ public class DriverService {
         }
         return foundDriver;
     }
+
+
 }
