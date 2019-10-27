@@ -1,5 +1,6 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.dtos.Receipt;
 import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.services.ParkingTransactionService;
 import javassist.NotFoundException;
@@ -37,4 +38,9 @@ public class ParkingTransactionController {
         return parkingTransactionService.findAllTransactions(page, pageSize);
     }
 
+    @GetMapping(path = "/{transactionId}/receipt", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Receipt generateReceiptGivenTransactionId (@PathVariable Long transactionId) {
+        return parkingTransactionService.createReceiptFromTransactionId(transactionId);
+    }
 }
