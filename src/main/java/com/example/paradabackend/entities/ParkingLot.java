@@ -22,12 +22,37 @@ public class ParkingLot {
     private int availableSpaces;
     @Min(value = 0)
     private int flatRate;
+    private Integer maxSpacePerLevel;
 
     private Integer ratePerHour;
     private Integer succeedingHourRate;
 
     @OneToMany(cascade = CascadeType.MERGE)
     private List<ParkingSpace> parkingSpaceList = new ArrayList<>();
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setAvailableSpaces(int availableSpaces) {
+        this.availableSpaces = availableSpaces;
+    }
+
+    public void setFlatRate(int flatRate) {
+        this.flatRate = flatRate;
+    }
+
+    public int getMaxSpacePerLevel() {
+        return maxSpacePerLevel;
+    }
+
+    public void setMaxSpacePerLevel(int maxSpacePerLevel) {
+        this.maxSpacePerLevel = maxSpacePerLevel;
+    }
 
     public Integer getId() {
         return id;
