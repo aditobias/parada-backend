@@ -14,6 +14,6 @@ public class HttpConfiguration implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .exposedHeaders("Content-Disposition")
                 .allowCredentials(true)
-                .allowedMethods("PUT", "POST", "GET", "DELETE", "OPTIONS");
+                .allowedMethods("PATCH", "POST", "GET", "DELETE", "OPTIONS");
     }
 }
