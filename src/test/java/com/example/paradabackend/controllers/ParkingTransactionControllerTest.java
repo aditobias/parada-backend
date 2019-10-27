@@ -1,5 +1,6 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.dtos.Receipt;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
@@ -93,6 +94,26 @@ public class ParkingTransactionControllerTest {
         ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(listOfTransactions)));
+
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void should_get_transaction_and_return_receipt_when_id_is_specified() throws Exception {
+        ParkingTransaction parkingTransaction =  new ParkingTransaction("Gray","ParkingLot1","1A1");
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.setParkingLotName("parkingLot1");
+        ParkingSpace parkingSpace = new ParkingSpace();
+        parkingSpace.setId("PL1-1A1");
+
+        Receipt receipt = new Receipt();
+        receipt.setParkingTransaction(parkingTransaction);
+
+        when(parkingTransactionService. createReceiptFromTransactionId(1L)).thenReturn(receipt);
+
+        ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions/{transactionId}/receipt", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(receipt)));
 
         result.andExpect(status().isOk());
     }
