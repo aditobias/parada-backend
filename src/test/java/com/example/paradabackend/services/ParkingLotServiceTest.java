@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class ParkingLotServiceTest {
+
     @Autowired
     private ParkingLotService parkingLotService;
 
@@ -107,6 +108,7 @@ public class ParkingLotServiceTest {
         parkingLot.setParkingLotName(name);
         parkingLot.setLocation("Manila");
         parkingLot.setCapacity(2);
+        parkingLot.setMaxSpacePerLevel(1);
         parkingLot.setFlatRate(50);
         parkingLot.setRatePerHour(50);
         parkingLot.setSucceedingHourRate(15);
