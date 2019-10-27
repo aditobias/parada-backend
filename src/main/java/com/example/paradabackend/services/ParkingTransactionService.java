@@ -1,5 +1,6 @@
 package com.example.paradabackend.services;
 
+import com.example.paradabackend.dtos.Receipt;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
@@ -47,6 +48,13 @@ public class ParkingTransactionService {
         return null;
     }
 
+
+    public Receipt createReceiptFromTransactionId(long id) {
+        ParkingTransaction transactionById = findTransactionById(id);
+        Receipt receipt = new Receipt();
+        receipt.setParkingTransaction(transactionById);
+        return receipt;
+    }
 
     public ParkingTransaction findTransactionById(long id) {
         Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(id);
