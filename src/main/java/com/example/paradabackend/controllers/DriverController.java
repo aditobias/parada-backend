@@ -32,4 +32,10 @@ public class DriverController {
     public Driver getDriversProfile(@PathVariable String username) throws NotFoundException {
         return driverService.findDriverProfile(username);
     }
+
+    @PatchMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Driver editDriversProfile(@PathVariable String username, @RequestBody Driver driver) throws NotFoundException {
+        return driverService.editDriverProfile(username, driver);
+    }
 }

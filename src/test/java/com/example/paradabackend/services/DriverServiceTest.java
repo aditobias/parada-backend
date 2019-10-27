@@ -78,4 +78,39 @@ public class DriverServiceTest {
         assertThrows(NotFoundException.class, () ->
                 driverService.findDriverProfile(null));
     }
+
+    //TODO: No driver profile.
+//    @Test
+//    public void should_update_driver_profile_when_user_update_details() throws NotFoundException {
+//        Driver driver = new Driver("kg96");
+//        driver.setPassword("password");
+//        driver.setFirstName("Kenneth");
+//        driver.setLastName("Garcia");
+//        driver.setEmail("john.kenneth.garcia@oocl.com");
+//        driver.setMobileNumber("09123456789");
+//        driver.setEmailVerificationStatus("True");
+//        driver.setProfilePicture("www.google.com");
+//
+//        Driver editedDriver = new Driver("kg96");
+//        editedDriver.setPassword("password123");
+//        editedDriver.setFirstName("Ken");
+//        editedDriver.setLastName("Gar");
+//        editedDriver.setEmail("john@oocl.com");
+//        editedDriver.setMobileNumber("09123456780");
+//        editedDriver.setEmailVerificationStatus("True");
+//        editedDriver.setProfilePicture("www.googlex.com");
+//
+//        when(driverService.save(driver)).thenReturn(driver);
+//        when(driverRepository.save(driver)).thenReturn(driver);
+//
+//        Driver expectedResult = driverService.editDriverProfile("kg96", new Driver("kg96"));
+//
+//        MatcherAssert.assertThat(editedDriver, is(expectedResult));
+//    }
+
+    @Test
+    void should_throw_error_in_update_profile_when_user_is_not_found() {
+        assertThrows(NotFoundException.class, () ->
+                driverService.editDriverProfile("zk", new Driver(null)));
+    }
 }

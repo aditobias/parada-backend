@@ -39,4 +39,20 @@ public class DriverService {
     }
 
 
+    public Driver editDriverProfile(String username, Driver driver) throws NotFoundException {
+        Driver foundDriver = driverRepository.findByUsername(username);
+        if (foundDriver == null ) {
+            throw new NotFoundException("No driver profile.");
+        }
+
+        foundDriver.setUsername(driver.getUsername());
+        foundDriver.setPassword(driver.getPassword());
+        foundDriver.setEmail(driver.getEmail());
+        foundDriver.setFirstName(driver.getEmail());
+        foundDriver.setLastName(driver.getLastName());
+        foundDriver.setMobileNumber(driver.getMobileNumber());
+        foundDriver.setProfilePicture(driver.getProfilePicture());
+
+        return driverRepository.save(foundDriver);
+    }
 }
