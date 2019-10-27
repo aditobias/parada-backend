@@ -38,6 +38,7 @@ class ParkingSpaceServiceTest {
         parkingSpace.setId(id);
         parkingSpace.setParkingLotName(parkingLotName);
         parkingSpace.setParkingLevel(1);
+        parkingSpace.setParkingPosition("A1");
         parkingSpace.setOccupied(false);
 
         return parkingSpace;
@@ -57,7 +58,7 @@ class ParkingSpaceServiceTest {
 
     @Test
     void should_add_new_parking_space_when_added_new_detail() throws NotFoundException {
-        ParkingSpace myParkingSpace = dummyParkingSpace("PLT-1A3", "1");
+        ParkingSpace myParkingSpace = dummyParkingSpace("PLT-1A1", "1");
         ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
         myParkingLot.setParkingSpaceList(Collections.singletonList(myParkingSpace));
 

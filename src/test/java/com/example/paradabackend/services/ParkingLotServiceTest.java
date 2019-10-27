@@ -12,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,7 +47,7 @@ public class ParkingLotServiceTest {
     }
 
     @Test
-    void should_add_parking_lot_when_new_details() throws NotFoundException {
+    void should_add_parking_lot_when_new_details() throws Exception {
         ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
 
         when(parkingLotRepository.save(myParkingLot)).thenReturn(myParkingLot);
@@ -72,10 +74,32 @@ public class ParkingLotServiceTest {
         assertEquals(parkingLotResult, myParkingLot);
     }
 
+    //  TODO: assertThrows test cases for similar names
+//    @Test
+//    void should_throw_exception_when_parking_lot_already_exists() throws Exception {
+//        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+//
+//        assertThrows(IllegalArgumentException.class, () ->
+//                parkingLotService.addParkingLot(myParkingLot));
+//    }
+
     @Test
     void should_NOT_show_specific_parking_lot_when_no_input() {
         assertThrows(NotFoundException.class, () ->
                 parkingLotService.findSpecificParkingLot(null));
+    }
+
+
+    @Test
+    void should_generate_parking_spaces_when_given_parking_lot_capacity() throws Exception {
+        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+
+        when(parkingLotRepository.save(myParkingLot)).thenReturn(myParkingLot);
+
+        ParkingLot foundParkingLot = parkingLotService.addParkingLot(myParkingLot);
+        ParkingLot foundParkingLot2 = parkingLotService.addParkingLot(myParkingLot);
+
+        assertThat(Arrays.asList(foundParkingLot, foundParkingLot2), hasSize(myParkingLot.getCapacity()));
     }
 
     private ParkingLot dummyParkingLot(String name) {

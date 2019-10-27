@@ -26,7 +26,7 @@ public class ParkingSpaceController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParkingSpace addNewParkingSpaceToParkingLot(@PathVariable String parkingLotName,
-                                                                       @RequestBody ParkingSpace parkingSpace) throws NotFoundException {
+                                                       @RequestBody ParkingSpace parkingSpace) throws NotFoundException {
         ParkingLot parkingLot = parkingLotService.findSpecificParkingLot(parkingLotName);
 
         return parkingSpaceService.addNewParkingSpace(parkingLot, parkingSpace);
@@ -38,10 +38,10 @@ public class ParkingSpaceController {
         return parkingSpaceService.findAllByParkingLotName(parkingLotName);
     }
 
-    @PatchMapping(value="" ,
+    @PatchMapping(value = "",
             consumes = {"application/json"})
     public ParkingSpace updateParkingSpace(@PathVariable String parkingLotName,
-                                           @RequestBody ParkingSpace parkingSpace){
+                                           @RequestBody ParkingSpace parkingSpace) {
 
         ParkingSpace updateToOccupied = parkingSpaceService.
                 updateToIsOccupiedWhenReserved(parkingSpace);

@@ -1,6 +1,8 @@
 package com.example.paradabackend.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,18 +10,24 @@ import java.util.Objects;
 public class ParkingLot {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private int id;
+
     @Column(unique = true)
     private String parkingLotName;
     private String location;
-    private Integer capacity;
-    private Integer availableSpaces;
-    private Integer flatRate;
+
+    @Min(value = 0)
+    private int capacity;
+    @Min(value = 0)
+    private int availableSpaces;
+    @Min(value = 0)
+    private int flatRate;
+
     private Integer ratePerHour;
     private Integer succeedingHourRate;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<ParkingSpace> parkingSpaceList;
+    @OneToMany(cascade = CascadeType.MERGE)
+    private List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
     public Integer getId() {
         return id;
