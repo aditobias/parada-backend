@@ -53,9 +53,14 @@ public class ParkingTransactionServiceTest {
         when(parkingSpaceRepository.findById(parkingSpaceID)).thenReturn(Optional.of(parkingSpace));
         when(parkingLotRepository.findByParkingLotName(parkingLot.getParkingLotName())).thenReturn(parkingLot);
         when(parkingTransactionRepository.save(eq(parkingTransaction))).thenReturn(parkingTransaction);
-
         ParkingTransaction parkingTransactionAdded =
-                parkingTransactionService.addParkingTransaction("ParkingLot1" , parkingSpaceID);
+                parkingTransactionService.addParkingTransaction("ParkingLot1" , parkingSpaceID, parkingTransaction);
+        ParkingSpace newParkingSpace = new ParkingSpace();
+        newParkingSpace.setId(parkingSpaceID);
+        ParkingLot newParkingLot = new ParkingLot();
+        newParkingLot.setParkingLotName("ParkingLot1");
+        parkingTransactionAdded.setUsername("Gray");
+        parkingTransactionAdded.setParkingPosition("1A1");
 
         MatcherAssert.assertThat(parkingTransactionAdded, is(parkingTransaction));
     }
@@ -83,9 +88,9 @@ public class ParkingTransactionServiceTest {
         PageImpl<ParkingTransaction> parkingTransactions = new PageImpl<>(listOfTransactions);
         when(parkingTransactionRepository.findAll(any(PageRequest.class))).thenReturn(parkingTransactions);
 
-        Page<ParkingTransaction> foundTransaction = parkingTransactionService.findAllTransactions(0,5);
+        Page<ParkingTransaction> transactionPage = parkingTransactionService.findAllTransactions(0,5);
 
-        MatcherAssert.assertThat(listOfTransactions, is(foundTransaction));
+        MatcherAssert.assertThat(transactionPage.getContent(), is(listOfTransactions));
     }
 
     @Test

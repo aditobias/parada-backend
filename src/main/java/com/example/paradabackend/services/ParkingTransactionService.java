@@ -29,17 +29,14 @@ public class ParkingTransactionService {
     ParkingLotRepository parkingLotRepository;
 
 
-    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId) {
+    public ParkingTransaction addParkingTransaction( String parkingLotName ,String parkingSpaceID , ParkingTransaction parkingTransaction ) {
+        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceID);
 
-        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceId);
-
-        if (parkingSpaceFound.isPresent()) {
-            ParkingTransaction parkingTransaction = new ParkingTransaction();
+        if(parkingSpaceFound.isPresent()) {
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
             parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
-
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setVoided("NotVoided");
