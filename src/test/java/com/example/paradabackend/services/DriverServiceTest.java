@@ -88,10 +88,10 @@ public class DriverServiceTest {
 
     @Test
     public void should_throw_exception_when_driver_already_exists() {
-        Driver myDriver = new Driver("zk");
-        myDriver.setPassword("zk");
-        Driver myDriver2 = new Driver("zk");
-        myDriver2.setPassword("zk");
+        Driver myDriver = createDriver();
+        myDriver.setUsername("zk");
+        Driver myDriver2 = createDriver();
+        myDriver2.setUsername("zk");
 
         when(driverRepository.findByUsername("zk")).thenReturn(myDriver);
 
@@ -102,14 +102,8 @@ public class DriverServiceTest {
 
     @Test
     public void should_return_driver_profile() throws NotFoundException {
-        Driver driver = new Driver("kg96");
-        driver.setPassword("password");
-        driver.setFirstName("Kenneth");
-        driver.setLastName("Garcia");
-        driver.setEmail("john.kenneth.garcia@oocl.com");
-        driver.setMobileNumber("09123456789");
-        driver.setEmailVerificationStatus("True");
-        driver.setProfilePicture("www.google.com");
+        Driver driver = createDriver();
+
         when(driverRepository.findByUsername("kg96")).thenReturn(driver);
 
         Driver foundDriver = driverService.findDriverProfile("kg96");
@@ -125,14 +119,7 @@ public class DriverServiceTest {
 
     @Test
     public void should_update_driver_profile_when_user_update_details() throws NotFoundException {
-        Driver existingDriver = new Driver("kg96");
-        existingDriver.setPassword("password");
-        existingDriver.setFirstName("Kenneth");
-        existingDriver.setLastName("Garcia");
-        existingDriver.setEmail("john.kenneth.garcia@oocl.com");
-        existingDriver.setMobileNumber("09123456789");
-        existingDriver.setEmailVerificationStatus("True");
-        existingDriver.setProfilePicture("www.google.com");
+        Driver existingDriver = createDriver();
 
         when(driverRepository.findByUsername("kg96")).thenReturn(existingDriver);
 
@@ -153,8 +140,21 @@ public class DriverServiceTest {
     }
 
     @Test
-    void should_throw_error_in_update_profile_when_user_is_not_found() {
+    public void should_throw_error_in_update_profile_when_user_is_not_found() {
         assertThrows(NotFoundException.class, () ->
                 driverService.editDriverProfile("zk", new Driver(null)));
+    }
+
+    public Driver createDriver(){
+        Driver driver = new Driver("kg96");
+        driver.setPassword("password");
+        driver.setFirstName("Kenneth");
+        driver.setLastName("Garcia");
+        driver.setEmail("john.kenneth.garcia@oocl.com");
+        driver.setMobileNumber("09123456789");
+        driver.setEmailVerificationStatus("True");
+        driver.setProfilePicture("www.google.com");
+
+        return driver;
     }
 }
