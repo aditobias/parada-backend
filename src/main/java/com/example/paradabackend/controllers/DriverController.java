@@ -23,7 +23,7 @@ public class DriverController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Driver postNewDriver(@RequestBody Driver driver) {
+    public Driver postNewDriver(@RequestBody Driver driver) throws NotFoundException {
         return driverService.save(driver);
     }
 

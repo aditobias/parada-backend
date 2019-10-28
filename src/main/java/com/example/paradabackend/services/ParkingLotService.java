@@ -16,13 +16,13 @@ import static java.util.Objects.isNull;
 
 @Service
 public class ParkingLotService {
+    private static final char[] PARKING_LOT_ROW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
 
     @Autowired
     private ParkingSpaceRepository parkingSpaceRepository;
-
 
     public Iterable<ParkingLot> findAllParkingLot(Integer page, Integer pageSize) {
         return parkingLotRepository.findAll(PageRequest.of(page, pageSize));
@@ -39,28 +39,31 @@ public class ParkingLotService {
             throw new IllegalArgumentException(parkingLot.getParkingLotName() + " already exists!");
         }
 
-        Integer capacity = parkingLot.getCapacity();
-        List<ParkingSpace> parkingSpaceList = new ArrayList<>();
-
-        generateParkingSpace(parkingLot, capacity, parkingSpaceList);
-
+        List<ParkingSpace> parkingSpaceList = generateParkingSpace(parkingLot);
+        parkingLot.setAvailableSpaces(parkingLot.getCapacity());
         List<ParkingSpace> newParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpaceList);
         parkingLot.setParkingSpaceList(newParkingSpaceList);
         return parkingLotRepository.save(parkingLot);
     }
 
-    private void generateParkingSpace(ParkingLot parkingLot, Integer capacity, List<ParkingSpace> parkingSpaceList) {
-        for (int i = 0; i < capacity; i++) {
-            ParkingSpace parkingSpace = new ParkingSpace();
-            parkingSpace.setParkingLevel(1);
-            parkingSpace.setParkingPosition("A1");
-            parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
-            parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
-            parkingSpace.setOccupied(false);
+    public List<ParkingSpace> generateParkingSpace(ParkingLot parkingLot) {
+        int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
+        List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
-            parkingSpaceList.add(parkingSpace);
-            parkingSpaceRepository.save(parkingSpace);
+        for (int level = 1; level <= totalLevel; level++) {
+            for(int position = 1; position <= parkingLot.getMaxSpacePerLevel(); position++){
+                ParkingSpace parkingSpace = new ParkingSpace();
+                parkingSpace.setParkingLevel(level);
+                parkingSpace.setParkingPosition(String.valueOf(PARKING_LOT_ROW[level - 1]) + position);
+                parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
+                parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
+                parkingSpace.setOccupied(false);
+
+                parkingSpaceList.add(parkingSpace);
+            }
         }
+        parkingSpaceRepository.saveAll(parkingSpaceList);
+        return parkingSpaceList;
     }
 
     public ParkingLot findSpecificParkingLot(String parkingLotName) throws NotFoundException {

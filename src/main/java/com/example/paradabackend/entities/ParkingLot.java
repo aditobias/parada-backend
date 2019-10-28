@@ -22,6 +22,8 @@ public class ParkingLot {
     private int availableSpaces;
     @Min(value = 0)
     private int flatRate;
+    @Min(value = 0)
+    private int maxSpacePerLevel;
 
     private Integer ratePerHour;
     private Integer succeedingHourRate;
@@ -29,11 +31,11 @@ public class ParkingLot {
     @OneToMany(cascade = CascadeType.MERGE)
     private List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -53,28 +55,36 @@ public class ParkingLot {
         this.location = location;
     }
 
-    public Integer getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(Integer capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
-    public Integer getAvailableSpaces() {
+    public int getAvailableSpaces() {
         return availableSpaces;
     }
 
-    public void setAvailableSpaces(Integer availableSpaces) {
+    public void setAvailableSpaces(int availableSpaces) {
         this.availableSpaces = availableSpaces;
     }
 
-    public Integer getFlatRate() {
+    public int getFlatRate() {
         return flatRate;
     }
 
-    public void setFlatRate(Integer flatRate) {
+    public void setFlatRate(int flatRate) {
         this.flatRate = flatRate;
+    }
+
+    public int getMaxSpacePerLevel() {
+        return maxSpacePerLevel;
+    }
+
+    public void setMaxSpacePerLevel(int maxSpacePerLevel) {
+        this.maxSpacePerLevel = maxSpacePerLevel;
     }
 
     public Integer getRatePerHour() {
@@ -106,17 +116,20 @@ public class ParkingLot {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParkingLot that = (ParkingLot) o;
-        return Objects.equals(id, that.id) &&
+        return id == that.id &&
+                capacity == that.capacity &&
+                availableSpaces == that.availableSpaces &&
+                flatRate == that.flatRate &&
+                maxSpacePerLevel == that.maxSpacePerLevel &&
                 Objects.equals(parkingLotName, that.parkingLotName) &&
                 Objects.equals(location, that.location) &&
-                Objects.equals(capacity, that.capacity) &&
-                Objects.equals(flatRate, that.flatRate) &&
                 Objects.equals(ratePerHour, that.ratePerHour) &&
-                Objects.equals(succeedingHourRate, that.succeedingHourRate);
+                Objects.equals(succeedingHourRate, that.succeedingHourRate) &&
+                Objects.equals(parkingSpaceList, that.parkingSpaceList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parkingLotName, location, capacity, flatRate, ratePerHour, succeedingHourRate);
+        return Objects.hash(id, parkingLotName, location, capacity, availableSpaces, flatRate, maxSpacePerLevel, ratePerHour, succeedingHourRate, parkingSpaceList);
     }
 }

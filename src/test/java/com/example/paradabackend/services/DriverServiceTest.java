@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class DriverServiceTest {
+
     @Autowired
     private DriverService driverService;
 
@@ -42,12 +43,12 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void should_post_new_Driver() {
+    public void should_post_new_Driver() throws NotFoundException {
         Driver driver = new Driver("driver");
         driver.setPassword("password");
         driver.setFirstName("jed");
 
-        when(driverRepository.save(driver)).thenReturn(driver);
+        when(driverService.save(driver)).thenReturn(driver);
 
         Driver foundDriver = driverService.save(driver);
 

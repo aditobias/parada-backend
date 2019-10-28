@@ -104,6 +104,7 @@ fabric.properties
 
 # H2 database
 h2/org.mv.db
+h2/org.trace.db
 
 #logs
 logs/application.log

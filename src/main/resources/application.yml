@@ -7,14 +7,11 @@ logging:
       hibernate: DEBUG
 spring:
   datasource:
-    url:  jdbc:h2:file:./h2/org
+    url: jdbc:mysql://10.222.112.155:3306/parada_database
+    username: adminUser
+    password: admin1234
   jpa:
     hibernate:
       ddl-auto: update
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
 #  server:
 #    port: 8086

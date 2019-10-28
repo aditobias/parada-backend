@@ -12,13 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -48,12 +52,17 @@ public class ParkingTransactionServiceTest {
 
         when(parkingSpaceRepository.findById(parkingSpaceID)).thenReturn(Optional.of(parkingSpace));
         when(parkingLotRepository.findByParkingLotName(parkingLot.getParkingLotName())).thenReturn(parkingLot);
-        when(parkingTransactionRepository.save(parkingTransaction)).thenReturn(parkingTransaction);
-
+        when(parkingTransactionRepository.save(eq(parkingTransaction))).thenReturn(parkingTransaction);
         ParkingTransaction parkingTransactionAdded =
                 parkingTransactionService.addParkingTransaction("ParkingLot1" , parkingSpaceID, parkingTransaction);
+        ParkingSpace newParkingSpace = new ParkingSpace();
+        newParkingSpace.setId(parkingSpaceID);
+        ParkingLot newParkingLot = new ParkingLot();
+        newParkingLot.setParkingLotName("ParkingLot1");
+        parkingTransactionAdded.setUsername("Gray");
+        parkingTransactionAdded.setParkingPosition("1A1");
 
-        assertThat(parkingTransaction, is(parkingTransactionAdded));
+        MatcherAssert.assertThat(parkingTransactionAdded, is(parkingTransaction));
     }
 
     @Test
@@ -76,11 +85,12 @@ public class ParkingTransactionServiceTest {
                 new ParkingTransaction("Jeanne","ParkingLot2","1A2")
         );
 
-        when(parkingTransactionRepository.findAll()).thenReturn(listOfTransactions);
+        PageImpl<ParkingTransaction> parkingTransactions = new PageImpl<>(listOfTransactions);
+        when(parkingTransactionRepository.findAll(any(PageRequest.class))).thenReturn(parkingTransactions);
 
-        Iterable<ParkingTransaction>  foundTransaction = parkingTransactionService.findAllTransactions(0,5);
+        Page<ParkingTransaction> transactionPage = parkingTransactionService.findAllTransactions(0,5);
 
-        MatcherAssert.assertThat(listOfTransactions, is(foundTransaction));
+        MatcherAssert.assertThat(transactionPage.getContent(), is(listOfTransactions));
     }
 
     @Test

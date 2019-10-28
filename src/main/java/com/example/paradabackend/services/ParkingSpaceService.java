@@ -8,7 +8,9 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,15 +42,19 @@ public class ParkingSpaceService {
     private void updateParkingLot(ParkingLot parkingLot, ParkingSpace parkingSpace) {
         List<ParkingSpace> updatedParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpace);
 
-        Long occupiedParkingSpaces = parkingLot.getParkingSpaceList().stream()
-                .filter(ParkingSpace::isOccupied)
-                .count();
+        long occupiedParkingSpaces = getOccupiedParkingSpaces(parkingLot);
 
         parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));
         parkingLot.setParkingSpaceList(updatedParkingSpaceList);
         parkingLot.setCapacity(parkingLot.getCapacity() + 1);
 
         parkingLotRepository.save(parkingLot);
+    }
+
+    private long getOccupiedParkingSpaces(ParkingLot parkingLot) {
+        return parkingLot.getParkingSpaceList().stream()
+                .filter(ParkingSpace::isOccupied)
+                .count();
     }
 
     private List<ParkingSpace> updateParkingSpaceList(ParkingLot parkingLot, ParkingSpace parkingSpace) {
@@ -68,13 +74,13 @@ public class ParkingSpaceService {
     private String getGeneratedIdForParkingSpace(ParkingLot parkingLot, ParkingSpace parkingSpace) {
         StringBuilder parkingLotNameBuilder = getParkingLotNameBuilder(parkingLot);
 
-        return parkingLotNameBuilder.toString() + '-' +  parkingSpace.getParkingLevel() + parkingSpace.getParkingPosition();
+        return parkingLotNameBuilder.toString() + '-' + parkingSpace.getParkingLevel() + parkingSpace.getParkingPosition();
     }
 
     private StringBuilder getParkingLotNameBuilder(ParkingLot parkingLot) {
         StringBuilder parkingLotNameBuilder = new StringBuilder();
-        for(final char c : parkingLot.getParkingLotName().toCharArray())
-            if(Character.isUpperCase(c) || Character.isDigit(c))
+        for (final char c : parkingLot.getParkingLotName().toCharArray())
+            if (Character.isUpperCase(c) || Character.isDigit(c))
                 parkingLotNameBuilder.append(c);
 
         return parkingLotNameBuilder;
@@ -83,8 +89,13 @@ public class ParkingSpaceService {
     public ParkingSpace updateToIsOccupiedWhenReserved(ParkingSpace parkingSpace) {
         Optional<ParkingSpace> parkingSpaceToOccupy = parkingSpaceRepository.findById(parkingSpace.getId());
 
-        if(parkingSpaceToOccupy.isPresent()){
+        if (parkingSpaceToOccupy.isPresent()) {
+            ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpaceToOccupy.get().getParkingLotName());
             parkingSpaceToOccupy.get().setOccupied(true);
+            parkingSpaceToOccupy.get().setReserveTime(new Timestamp(new Date().getTime()));
+
+            long occupiedParkingSpaces = getOccupiedParkingSpaces(parkingLot);
+            parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));
             return parkingSpaceRepository.save(parkingSpaceToOccupy.get());
         }
 
