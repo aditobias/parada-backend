@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -106,7 +107,7 @@ public class ParkingTransactionControllerTest {
     void should_get_transaction_and_return_receipt_when_id_is_specified() throws Exception {
         ParkingTransaction parkingTransaction =  new ParkingTransaction("Gray","ParkingLot1","1A1");
         ParkingLot parkingLot = new ParkingLot();
-        parkingLot.setParkingLotName("parkingLot1");
+        parkingLot.setParkingLotName("ParkingLot1");
         ParkingSpace parkingSpace = new ParkingSpace();
         parkingSpace.setId("PL1-1A1");
 
@@ -119,6 +120,11 @@ public class ParkingTransactionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(receipt)));
 
-        result.andExpect(status().isOk());
+        result.andExpect(status().isOk())
+            .andDo(print())
+            .andExpect(jsonPath("$.parkingTransaction.username", is("Gray")))
+            .andExpect(jsonPath("$.parkingTransaction.parkingLotName", is("ParkingLot1")))
+            .andExpect(jsonPath("$.parkingTransaction.parkingPosition", is("1A1")))
+        ;
     }
 }

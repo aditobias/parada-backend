@@ -7,6 +7,7 @@ import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,10 +30,10 @@ public class ParkingTransactionService {
     ParkingLotRepository parkingLotRepository;
 
 
-    public ParkingTransaction addParkingTransaction( String parkingLotName ,String parkingSpaceID , ParkingTransaction parkingTransaction ) {
+    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceID, ParkingTransaction parkingTransaction) {
         Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceID);
 
-        if(parkingSpaceFound.isPresent()) {
+        if (parkingSpaceFound.isPresent()) {
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
@@ -63,7 +64,15 @@ public class ParkingTransactionService {
         return parkingTransaction.get();
     }
 
-    public Page<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
-        return parkingTransactionRepository.findAll(PageRequest.of(page , pageSize));
+    public Page<ParkingTransaction> findAllTransactions(Integer page, Integer pageSize) {
+        return parkingTransactionRepository.findAll(PageRequest.of(page, pageSize));
+    }
+
+    public List<ParkingTransaction> findAllByUsername(String username) throws NotFoundException {
+        List<ParkingTransaction> getAllDriversTransaction = parkingTransactionRepository.findAllByUsername(username);
+        if (getAllDriversTransaction == null) {
+            throw new NotFoundException("No transaction found!");
+        }
+        return getAllDriversTransaction;
     }
 }
