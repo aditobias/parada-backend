@@ -85,10 +85,10 @@ public class DriverControllerTest {
         Driver driver = new Driver();
         driver.setUsername("Tin");
 
-        when(driverService.save(driver)).thenThrow(new NotFoundException("Username already exist!"));
+        when(driverService.save(driver)).thenThrow(new IllegalArgumentException("Username already exist!"));
         ResultActions result = mvc.perform(post("/drivers")
                 .contentType(MediaType.APPLICATION_JSON));
-        result.andExpect(status().isOk());
+        result.andExpect(status().isBadRequest());
     }
 
 

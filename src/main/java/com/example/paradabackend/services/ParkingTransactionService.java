@@ -8,6 +8,7 @@ import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +28,11 @@ public class ParkingTransactionService {
     @Autowired
     ParkingLotRepository parkingLotRepository;
 
-    private ParkingSpace parkingSpace;
 
-    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId, ParkingTransaction parkingTransaction) {
+    public ParkingTransaction addParkingTransaction( String parkingLotName ,String parkingSpaceID , ParkingTransaction parkingTransaction ) {
+        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceID);
 
-        Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceId);
-
-        if (parkingSpaceFound.isPresent()) {
+        if(parkingSpaceFound.isPresent()) {
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
@@ -64,7 +63,7 @@ public class ParkingTransactionService {
         return parkingTransaction.get();
     }
 
-    public Iterable<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
+    public Page<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
         return parkingTransactionRepository.findAll(PageRequest.of(page , pageSize));
     }
 }

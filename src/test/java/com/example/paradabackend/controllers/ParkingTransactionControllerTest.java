@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -89,13 +90,16 @@ public class ParkingTransactionControllerTest {
                 new ParkingTransaction("Jeanne","ParkingLot2","1A2")
         );
 
-        when(parkingTransactionService.findAllTransactions(0,5)).thenReturn(listOfTransactions);
+        PageImpl<ParkingTransaction> parkingTransactions = new PageImpl<>(listOfTransactions);
+        when(parkingTransactionService.findAllTransactions(0,5)).thenReturn(parkingTransactions);
 
         ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(listOfTransactions)));
 
-        result.andExpect(status().isOk());
+        result.andExpect(status().isOk())
+
+        ;
     }
 
     @Test

@@ -28,7 +28,7 @@ public class DriverController {
     }
 
     @GetMapping(value="/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(code = HttpStatus.CREATED)
+    @ResponseStatus(code = HttpStatus.OK)
     public Driver getDriversProfile(@PathVariable String username) throws NotFoundException {
         return driverService.findDriverProfile(username);
     }

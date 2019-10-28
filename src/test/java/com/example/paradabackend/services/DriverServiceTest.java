@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class DriverServiceTest {
+
     @Autowired
     private DriverService driverService;
 
@@ -54,7 +55,6 @@ public class DriverServiceTest {
         MatcherAssert.assertThat(driver, is(foundDriver));
     }
 
-
     @Test
     public void should_return_driver_profile() throws NotFoundException {
         Driver driver = new Driver("kg96");
@@ -66,7 +66,6 @@ public class DriverServiceTest {
         driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
         when(driverRepository.findByUsername("kg96")).thenReturn(driver);
-
 
         Driver foundDriver = driverService.findDriverProfile("kg96");
 

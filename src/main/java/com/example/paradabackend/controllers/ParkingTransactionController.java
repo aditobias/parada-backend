@@ -16,7 +16,7 @@ public class ParkingTransactionController {
     @Autowired
     ParkingTransactionService parkingTransactionService;
 
-    @PostMapping(path = "/parkingSpace/{parkingSpaceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/parkingSpace/{parkingSpaceId}" , consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParkingTransaction addNewParkingTransaction(@PathVariable String parkingLotName,
                                                        @PathVariable String parkingSpaceId,
