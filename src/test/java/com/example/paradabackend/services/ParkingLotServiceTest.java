@@ -80,13 +80,16 @@ public class ParkingLotServiceTest {
 
     @Test
     void should_throw_exception_when_parking_lot_already_exists() throws Exception {
-        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
-        ParkingLot myParkingLot2 = dummyParkingLot("ParkingLot Test");
+        String parkingLotName = "ParkingLot Test";
+        ParkingLot myParkingLot = dummyParkingLot(parkingLotName);
+        ParkingLot myParkingLot2 = dummyParkingLot(parkingLotName);
 
-        when(parkingLotRepository.findByParkingLotName("ParkingLot Test")).thenReturn(myParkingLot);
+        when(parkingLotRepository.findByParkingLotName(parkingLotName)).thenReturn(myParkingLot);
 
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 parkingLotService.addParkingLot(myParkingLot2));
+
+        assertThat(exception.getMessage(), is(parkingLotName + " already exists!"));
     }
 
     @Test
@@ -97,8 +100,10 @@ public class ParkingLotServiceTest {
 
         when(parkingLotRepository.save(myParkingLot)).thenReturn(myParkingLot);
 
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 parkingLotService.addParkingLot(myParkingLot));
+
+        assertThat(exception.getMessage(), is("Max Space Per Level is greater than the Capacity!"));
     }
 
     @Test

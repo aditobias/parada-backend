@@ -2,17 +2,27 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
+import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.DriverRepository;
+import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 public class DriverServiceTest {
@@ -22,6 +32,12 @@ public class DriverServiceTest {
 
     @MockBean
     private DriverRepository driverRepository;
+
+    @MockBean
+    private ParkingTransactionRepository parkingTransactionRepository;
+
+    @MockBean
+    private ParkingTransactionService parkingTransactionService;
 
     @Test
     public void should_find_Driver_by_username_and_password() {
@@ -56,6 +72,17 @@ public class DriverServiceTest {
     }
 
     @Test
+    public void should_throw_exception_when_driver_already_exists() {
+        Driver myDriver = new Driver("zk");
+        Driver myDriver2 = new Driver("zk");
+
+        when(driverRepository.findByUsername("zk")).thenReturn(myDriver);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                driverService.save(myDriver2));
+    }
+
+    @Test
     public void should_return_driver_profile() throws NotFoundException {
         Driver driver = new Driver("kg96");
         driver.setPassword("password");
@@ -76,5 +103,40 @@ public class DriverServiceTest {
     public void should_throw_Not_Found_Exception_if_username_is_null() {
         assertThrows(NotFoundException.class, () ->
                 driverService.findDriverProfile(null));
+    }
+
+    @Test
+    public void should_update_driver_profile_when_user_update_details() throws NotFoundException {
+        Driver existingDriver = new Driver("kg96");
+        existingDriver.setPassword("password");
+        existingDriver.setFirstName("Kenneth");
+        existingDriver.setLastName("Garcia");
+        existingDriver.setEmail("john.kenneth.garcia@oocl.com");
+        existingDriver.setMobileNumber("09123456789");
+        existingDriver.setEmailVerificationStatus("True");
+        existingDriver.setProfilePicture("www.google.com");
+
+        when(driverRepository.findByUsername("kg96")).thenReturn(existingDriver);
+
+        Driver updatedDriver = new Driver("kg96");
+        updatedDriver.setPassword("password123");
+        updatedDriver.setFirstName("Ken");
+        updatedDriver.setLastName("Gar");
+        updatedDriver.setEmail("john@oocl.com");
+        updatedDriver.setMobileNumber("09123456780");
+        updatedDriver.setEmailVerificationStatus("True");
+        updatedDriver.setProfilePicture("www.googles.com");
+
+        when(driverRepository.save(existingDriver)).thenReturn(updatedDriver);
+
+        Driver expectedResult = driverService.editDriverProfile("kg96", existingDriver);
+
+        MatcherAssert.assertThat(updatedDriver, is(expectedResult));
+    }
+
+    @Test
+    void should_throw_error_in_update_profile_when_user_is_not_found() {
+        assertThrows(NotFoundException.class, () ->
+                driverService.editDriverProfile("zk", new Driver(null)));
     }
 }
