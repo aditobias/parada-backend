@@ -16,16 +16,13 @@ import static java.util.Objects.isNull;
 
 @Service
 public class ParkingLotService {
-
+    private static final char[] PARKING_LOT_ROW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
 
     @Autowired
     private ParkingSpaceRepository parkingSpaceRepository;
-
-    char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-
 
     public Iterable<ParkingLot> findAllParkingLot(Integer page, Integer pageSize) {
         return parkingLotRepository.findAll(PageRequest.of(page, pageSize));
@@ -43,13 +40,13 @@ public class ParkingLotService {
         }
 
         List<ParkingSpace> parkingSpaceList = generateParkingSpace(parkingLot);
-
+        parkingLot.setAvailableSpaces(parkingLot.getCapacity());
         List<ParkingSpace> newParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpaceList);
         parkingLot.setParkingSpaceList(newParkingSpaceList);
         return parkingLotRepository.save(parkingLot);
     }
 
-    private List<ParkingSpace> generateParkingSpace(ParkingLot parkingLot) {
+    public List<ParkingSpace> generateParkingSpace(ParkingLot parkingLot) {
         int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
         List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
@@ -57,15 +54,15 @@ public class ParkingLotService {
             for(int position = 1; position <= parkingLot.getMaxSpacePerLevel(); position++){
                 ParkingSpace parkingSpace = new ParkingSpace();
                 parkingSpace.setParkingLevel(level);
-                parkingSpace.setParkingPosition(String.valueOf(alphabet[level - 1]) + position);
+                parkingSpace.setParkingPosition(String.valueOf(PARKING_LOT_ROW[level - 1]) + position);
                 parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
                 parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
                 parkingSpace.setOccupied(false);
 
                 parkingSpaceList.add(parkingSpace);
-                parkingSpaceRepository.save(parkingSpace);
             }
         }
+        parkingSpaceRepository.saveAll(parkingSpaceList);
         return parkingSpaceList;
     }
 

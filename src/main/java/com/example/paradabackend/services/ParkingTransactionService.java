@@ -8,6 +8,7 @@ import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +28,18 @@ public class ParkingTransactionService {
     @Autowired
     ParkingLotRepository parkingLotRepository;
 
-    private ParkingSpace parkingSpace;
 
-    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId, ParkingTransaction parkingTransaction) {
+    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId) {
 
         Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceId);
 
         if (parkingSpaceFound.isPresent()) {
+            ParkingTransaction parkingTransaction = new ParkingTransaction();
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
             parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
+
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setVoided("NotVoided");
@@ -64,7 +66,7 @@ public class ParkingTransactionService {
         return parkingTransaction.get();
     }
 
-    public Iterable<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
+    public Page<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
         return parkingTransactionRepository.findAll(PageRequest.of(page , pageSize));
     }
 }

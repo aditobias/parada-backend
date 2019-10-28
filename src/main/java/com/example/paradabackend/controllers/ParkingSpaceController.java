@@ -38,8 +38,7 @@ public class ParkingSpaceController {
         return parkingSpaceService.findAllByParkingLotName(parkingLotName);
     }
 
-    @PatchMapping(value = "",
-            consumes = {"application/json"})
+    @PatchMapping(consumes = {"application/json"})
     public ParkingSpace updateParkingSpace(@PathVariable String parkingLotName,
                                            @RequestBody ParkingSpace parkingSpace) {
 

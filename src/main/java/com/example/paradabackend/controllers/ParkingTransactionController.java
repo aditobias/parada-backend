@@ -16,12 +16,11 @@ public class ParkingTransactionController {
     @Autowired
     ParkingTransactionService parkingTransactionService;
 
-    @PostMapping(path = "/parkingSpace/{parkingSpaceId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/parkingSpace/{parkingSpaceId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public ParkingTransaction addNewParkingTransaction(@PathVariable String parkingLotName,
-                                                       @PathVariable String parkingSpaceId,
-                                                       @RequestBody ParkingTransaction parkingTransaction) throws NotFoundException {
-        return parkingTransactionService.addParkingTransaction( parkingLotName , parkingSpaceId , parkingTransaction );
+                                                       @PathVariable String parkingSpaceId) throws NotFoundException {
+        return parkingTransactionService.addParkingTransaction(parkingLotName , parkingSpaceId);
 
     }
 
