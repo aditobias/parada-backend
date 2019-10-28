@@ -106,4 +106,14 @@ public class ParkingSpaceService {
         return parkingSpaceRepository.findAllByParkingLotName(parkingLotName);
     }
 
+    public ParkingSpace updateStartTimeWhenPaid(String parkingSpaceId) {
+        Optional<ParkingSpace> foundParkingSpace = parkingSpaceRepository.findById(parkingSpaceId);
+
+        if (foundParkingSpace.isPresent()) {
+            foundParkingSpace.get().setStartTime(new Timestamp(System.currentTimeMillis()));
+            return parkingSpaceRepository.save(foundParkingSpace.get());
+        }
+        return null;
+    }
+
 }

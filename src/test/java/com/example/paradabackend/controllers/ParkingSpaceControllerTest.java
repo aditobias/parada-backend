@@ -4,6 +4,7 @@ import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.services.ParkingLotService;
 import com.example.paradabackend.services.ParkingSpaceService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,5 +109,24 @@ public class ParkingSpaceControllerTest {
                 .content(objectMapper.writeValueAsString(oldParkingSpace)));
         resultOfExecution.andExpect(status().isOk())
                 .andExpect(jsonPath("$.occupied", is(true)));
+    }
+
+    @Test
+    void should_update_start_time_of_parking_space_given_paid() throws Exception {
+        ParkingSpace parkingSpace = new ParkingSpace();
+        parkingSpace.setStartTime(new Timestamp(System.currentTimeMillis()));
+
+        when(parkingSpaceService.updateStartTimeWhenPaid(any())).thenReturn(parkingSpace);
+
+        ParkingSpace oldParkingSpace = new ParkingSpace();
+
+        ResultActions resultOfExecution = mvc.perform(patch("/parkingLots/parkingLot/parkingSpace/{parkingSpaceId}/enter", "PL10-1A1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(oldParkingSpace)));
+
+        resultOfExecution.andExpect(status().isOk())
+                            .andExpect(jsonPath("$.startTime", is(parkingSpace.getStartTime().getTime())));
+
     }
 }
