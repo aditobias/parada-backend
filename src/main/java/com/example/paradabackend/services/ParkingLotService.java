@@ -52,20 +52,13 @@ public class ParkingLotService {
     }
 
     public List<ParkingSpace> generateParkingSpace(ParkingLot parkingLot) {
-        int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
         List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
         // GENERATE PARKING SPACE
         generateTotalParkingSpace(parkingLot, parkingSpaceList);
 
         // ADDITIONAL PARKING SPACE
-        int extraSpace = parkingLot.getCapacity() % parkingLot.getMaxSpacePerLevel();
-        if (extraSpace != 0) {
-            for (int position = 1; position <= extraSpace; position++) {
-                ParkingSpace parkingSpace = generateParkingSpace(parkingLot, totalLevel + 1, position);
-                parkingSpaceList.add(parkingSpace);
-            }
-        }
+        generateAdditionalParkingSpace(parkingLot, parkingSpaceList);
 
         parkingSpaceRepository.saveAll(parkingSpaceList);
         return parkingSpaceList;
@@ -83,13 +76,30 @@ public class ParkingLotService {
         }
     }
 
+    public void generateAdditionalParkingSpace(ParkingLot parkingLot, List<ParkingSpace> parkingSpaceList) {
+        int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
+        int extraSpace = parkingLot.getCapacity() % parkingLot.getMaxSpacePerLevel();
+        if (extraSpace != 0) {
+            for (int position = 1; position <= extraSpace; position++) {
+                ParkingSpace parkingSpace = generateParkingSpace(parkingLot, totalLevel + 1, position);
+                parkingSpaceList.add(parkingSpace);
+            }
+        }
+    }
+
     public ParkingSpace generateParkingSpace(ParkingLot parkingLot, int level, int position) {
+        if (level > PARKING_LOT_ROW.length) {
+            throw new IndexOutOfBoundsException("Parking Level input cannot be greater than 26.");
+        }
+
         ParkingSpace parkingSpace = new ParkingSpace();
         parkingSpace.setParkingLevel(level);
         parkingSpace.setParkingPosition(String.valueOf(PARKING_LOT_ROW[level - 1]) + position);
         parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
         parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
         parkingSpace.setOccupied(false);
+
+
         return parkingSpace;
     }
 

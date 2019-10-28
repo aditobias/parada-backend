@@ -1,6 +1,7 @@
 package com.example.paradabackend.handlers;
 
 import javassist.NotFoundException;
+import org.jboss.jandex.Index;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,13 @@ public class ControllerExceptionHandler {
     @ResponseBody
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public Exception handleIllegalArgumentException(IllegalArgumentException e) {
+        return e;
+    }
+
+    @ExceptionHandler(IndexOutOfBoundsException.class)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public Exception handleIndexOutOfBoundsException(IndexOutOfBoundsException e) {
         return e;
     }
 }

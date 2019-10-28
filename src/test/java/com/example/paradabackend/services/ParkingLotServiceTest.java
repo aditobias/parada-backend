@@ -4,6 +4,7 @@ import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import javassist.NotFoundException;
+import org.h2.index.Index;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,15 +211,32 @@ public class ParkingLotServiceTest {
         assertThat(actualParkingSpace, is(expectedParkingSpace));
     }
 
-    //    @Test
+    @Test
+    void should_throw_exception_generate_parking_space_when_max_row_is_greater_than_26() {
+        String parkingLotName = "ParkingLot Test";
+
+        ParkingLot myParkingLot = new ParkingLot();
+        myParkingLot.setParkingLotName(parkingLotName);
+        myParkingLot.setMaxSpacePerLevel(26);
+
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () ->
+                parkingLotService.generateParkingSpace(myParkingLot, 27, 9));
+
+        assertThat(exception.getMessage(), is("Parking Level input cannot be greater than 26."));
+    }
+
+    //TODO
+//    @Test
 //    void should_generate_total_parking_space() {
 //        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+//        myParkingLot.setCapacity(1);
+//        myParkingLot.setMaxSpacePerLevel(1);
 //        List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 //
 //        parkingLotService.generateTotalParkingSpace(myParkingLot, parkingSpaceList);
 //
 //        assertThat(parkingSpaceList, is(Arrays.asList(
-//
+//            "PLT-1A1", "ParkingLot Test", 1, false
 //        )));
 //    }
 
