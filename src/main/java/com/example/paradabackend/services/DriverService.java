@@ -31,6 +31,12 @@ public class DriverService {
     public Driver save(Driver driver) {
         requireNotNullOrEmpty(driver.getUsername(), "Username cannot be empty");
         requireNotNullOrEmpty(driver.getPassword(), "Password cannot be empty");
+        requireNotNullOrEmpty(driver.getFirstName(), "First name cannot be empty");
+        requireNotNullOrEmpty(driver.getLastName(), "Last name cannot be empty");
+        requireNotNullOrEmpty(driver.getEmail(), "Email cannot be empty");
+        requireNotNullOrEmpty(driver.getMobileNumber(), "Mobile number cannot be empty");
+//        requireNotNullOrEmpty(driver.getEmailVerificationStatus(), "Email verification status cannot be empty");
+//        requireNotNullOrEmpty(driver.getProfilePicture(), "Profile picture cannot be empty");
 
         Driver existingDriver = driverRepository.findByUsername(driver.getUsername());
         if (existingDriver != null) {

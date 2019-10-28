@@ -42,7 +42,8 @@ public class DriverServiceTest {
 
     @Test
     public void should_find_Driver_by_username_and_password() {
-        Driver driver = new Driver("driver");
+        Driver driver = createDriver();
+        driver.setUsername("driver");
         driver.setPassword("password");
         driver.setFirstName("jed");
 
@@ -60,10 +61,8 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void should_post_new_Driver() throws NotFoundException {
-        Driver driver = new Driver("driver");
-        driver.setPassword("password");
-        driver.setFirstName("jed");
+    public void should_post_new_Driver() {
+        Driver driver = createDriver();
 
         when(driverService.save(driver)).thenReturn(driver);
 
@@ -74,16 +73,67 @@ public class DriverServiceTest {
 
     @Test
     public void should_throw_exception_when_username_is_empty() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                driverService.save(new Driver()));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            Driver driver = createDriver();
+            driver.setUsername("");
+            driverService.save(driver);
+        });
         assertThat(exception.getMessage(), is("Username cannot be empty"));
     }
 
     @Test
     public void should_throw_exception_when_password_is_empty() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                driverService.save(new Driver("with username")));
+        {
+            Driver driver = createDriver();
+            driver.setPassword("");
+            driverService.save(driver);
+        });
         assertThat(exception.getMessage(), is("Password cannot be empty"));
+    }
+
+    @Test
+    public void should_throw_exception_when_FirstName_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        {
+            Driver driver = createDriver();
+            driver.setFirstName("");
+            driverService.save(driver);
+        });
+        assertThat(exception.getMessage(), is("First name cannot be empty"));
+    }
+
+    @Test
+    public void should_throw_exception_when_LastName_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        {
+            Driver driver = createDriver();
+            driver.setLastName("");
+            driverService.save(driver);
+        });
+        assertThat(exception.getMessage(), is("Last name cannot be empty"));
+    }
+
+    @Test
+    public void should_throw_exception_when_Email_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        {
+            Driver driver = createDriver();
+            driver.setEmail("");
+            driverService.save(driver);
+        });
+        assertThat(exception.getMessage(), is("Email cannot be empty"));
+    }
+
+    @Test
+    public void should_throw_exception_when_MobileNumber_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        {
+            Driver driver = createDriver();
+            driver.setMobileNumber("");
+            driverService.save(driver);
+        });
+        assertThat(exception.getMessage(), is("Mobile number cannot be empty"));
     }
 
     @Test
