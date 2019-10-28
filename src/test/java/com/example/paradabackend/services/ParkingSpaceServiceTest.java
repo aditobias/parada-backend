@@ -2,8 +2,10 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
+import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
+import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -21,8 +23,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -36,6 +37,9 @@ class ParkingSpaceServiceTest {
 
     @MockBean
     private ParkingLotRepository parkingLotRepository;
+
+    @MockBean
+    private ParkingTransactionRepository parkingTransactionRepository;
 
 
     private ParkingSpace dummyParkingSpace(String id, String parkingLotName) {
@@ -100,13 +104,22 @@ class ParkingSpaceServiceTest {
 
         String parkingSpaceID = "PA-1A1";
         ParkingSpace parkingSpace = new ParkingSpace();
+        ParkingTransaction parkingTransaction = new ParkingTransaction();
         parkingSpace.setId(parkingSpaceID);
+        parkingSpace.setParkingLotName("ParkingLot1");
+        parkingSpace.setParkingPosition("A1");
+        parkingSpace.setParkingLevel(1);
+
         parkingSpace.setStartTime(new Timestamp(System.currentTimeMillis()));
 
         ParkingSpace updatedParkingSpace = new ParkingSpace();
         updatedParkingSpace.setId("PA-1A1");
         when(parkingSpaceRepository.findById(eq("PA-1A1"))).thenReturn(Optional.of(parkingSpace));
+        when(parkingTransactionRepository
+                .findByParkingLotNameAndParkingLevelAndParkingPosition("ParkingLot1",
+                        1, "A1")).thenReturn(parkingTransaction);
         when(parkingSpaceRepository.save(any())).thenReturn(updatedParkingSpace);
+        when(parkingTransactionRepository.save(any())).thenReturn(parkingTransaction);
 
         assertThat(updatedParkingSpace, is(parkingSpaceService.updateStartTimeWhenPaid(parkingSpaceID)));
     }

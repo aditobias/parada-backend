@@ -2,8 +2,10 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
+import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
+import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class ParkingSpaceService {
 
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private ParkingTransactionRepository parkingTransactionRepository;
 
     public ParkingSpace addNewParkingSpace(ParkingLot parkingLot, ParkingSpace parkingSpace) throws NotFoundException {
 
@@ -110,7 +115,16 @@ public class ParkingSpaceService {
         Optional<ParkingSpace> foundParkingSpace = parkingSpaceRepository.findById(parkingSpaceId);
 
         if (foundParkingSpace.isPresent()) {
+            ParkingTransaction parkingTransaction = parkingTransactionRepository
+                    .findByParkingLotNameAndParkingLevelAndParkingPosition(
+                            foundParkingSpace.get().getParkingLotName(),
+                            foundParkingSpace.get().getParkingLevel(),
+                            foundParkingSpace.get().getParkingPosition());
+
             foundParkingSpace.get().setStartTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setIsPaid(true);
+            parkingTransactionRepository.save(parkingTransaction);
+
             return parkingSpaceRepository.save(foundParkingSpace.get());
         }
         return null;
