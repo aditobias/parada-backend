@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -49,7 +50,7 @@ public class DriverServiceTest {
 
         Driver foundDriver = driverService.findByUsernameAndPassword(new DriverCredentials("driver", "password"));
 
-        MatcherAssert.assertThat(driver, is(foundDriver));
+        assertThat(driver, is(foundDriver));
     }
 
     @Test
@@ -68,18 +69,35 @@ public class DriverServiceTest {
 
         Driver foundDriver = driverService.save(driver);
 
-        MatcherAssert.assertThat(driver, is(foundDriver));
+        assertThat(driver, is(foundDriver));
+    }
+
+    @Test
+    public void should_throw_exception_when_username_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                driverService.save(new Driver()));
+        assertThat(exception.getMessage(), is("Username cannot be empty"));
+    }
+
+    @Test
+    public void should_throw_exception_when_password_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                driverService.save(new Driver("with username")));
+        assertThat(exception.getMessage(), is("Password cannot be empty"));
     }
 
     @Test
     public void should_throw_exception_when_driver_already_exists() {
         Driver myDriver = new Driver("zk");
+        myDriver.setPassword("zk");
         Driver myDriver2 = new Driver("zk");
+        myDriver2.setPassword("zk");
 
         when(driverRepository.findByUsername("zk")).thenReturn(myDriver);
 
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 driverService.save(myDriver2));
+        assertThat(exception.getMessage(), is("Username already exist!"));
     }
 
     @Test
@@ -96,7 +114,7 @@ public class DriverServiceTest {
 
         Driver foundDriver = driverService.findDriverProfile("kg96");
 
-        MatcherAssert.assertThat(driver, is(foundDriver));
+        assertThat(driver, is(foundDriver));
     }
 
     @Test
@@ -131,7 +149,7 @@ public class DriverServiceTest {
 
         Driver expectedResult = driverService.editDriverProfile("kg96", existingDriver);
 
-        MatcherAssert.assertThat(updatedDriver, is(expectedResult));
+        assertThat(updatedDriver, is(expectedResult));
     }
 
     @Test

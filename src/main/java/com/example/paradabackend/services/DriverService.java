@@ -8,6 +8,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class DriverService {
     @Autowired
@@ -26,12 +28,21 @@ public class DriverService {
         return foundDriver;
     }
 
-    public Driver save(Driver driver) throws IllegalArgumentException {
-        Driver checkIfUsernameExisting = driverRepository.findByUsername(driver.getUsername());
-        if (checkIfUsernameExisting != null) {
+    public Driver save(Driver driver) {
+        requireNotNullOrEmpty(driver.getUsername(), "Username cannot be empty");
+        requireNotNullOrEmpty(driver.getPassword(), "Password cannot be empty");
+
+        Driver existingDriver = driverRepository.findByUsername(driver.getUsername());
+        if (existingDriver != null) {
             throw new IllegalArgumentException("Username already exist!");
         }
         return driverRepository.save(driver);
+    }
+
+    private void requireNotNullOrEmpty(String field, String errorMessage) {
+        if(field == null || field.isEmpty()){
+            throw new IllegalArgumentException(errorMessage);
+        }
     }
 
     public Driver findDriverProfile(String username) throws NotFoundException {
