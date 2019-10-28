@@ -67,7 +67,6 @@ public class DriverServiceTest {
         driver.setProfilePicture("www.google.com");
         when(driverRepository.findByUsername("kg96")).thenReturn(driver);
 
-
         Driver foundDriver = driverService.findDriverProfile("kg96");
 
         MatcherAssert.assertThat(driver, is(foundDriver));
