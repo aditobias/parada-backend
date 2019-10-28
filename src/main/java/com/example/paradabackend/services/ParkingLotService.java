@@ -29,8 +29,9 @@ public class ParkingLotService {
     }
 
     public ParkingLot addParkingLot(ParkingLot parkingLot) throws Exception {
-        if (isNull(parkingLot)) {
-            throw new NotFoundException("Please complete all fields.");
+
+        if (isNull(parkingLot.getParkingLotName())) {
+            throw new IllegalArgumentException("No parking lot name!");
         }
 
         ParkingLot parkingLotName = parkingLotRepository.findByParkingLotName(parkingLot.getParkingLotName());
@@ -39,6 +40,11 @@ public class ParkingLotService {
             throw new IllegalArgumentException(parkingLot.getParkingLotName() + " already exists!");
         }
 
+        if (parkingLot.getCapacity() < parkingLot.getMaxSpacePerLevel()) {
+            throw new IllegalArgumentException("Max Space Per Level is greater than the Capacity!");
+        }
+
+        parkingLot.setAvailableSpaces(parkingLot.getCapacity());
         List<ParkingSpace> parkingSpaceList = generateParkingSpace(parkingLot);
         parkingLot.setAvailableSpaces(parkingLot.getCapacity());
         List<ParkingSpace> newParkingSpaceList = updateParkingSpaceList(parkingLot, parkingSpaceList);
@@ -50,24 +56,40 @@ public class ParkingLotService {
         int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
         List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
-        for (int level = 1; level <= totalLevel; level++) {
-            for(int position = 1; position <= parkingLot.getMaxSpacePerLevel(); position++){
-                ParkingSpace parkingSpace = new ParkingSpace();
-                parkingSpace.setParkingLevel(level);
-                parkingSpace.setParkingPosition(String.valueOf(PARKING_LOT_ROW[level - 1]) + position);
-                parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
-                parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
-                parkingSpace.setOccupied(false);
+        int maxSpacePerLevel = parkingLot.getMaxSpacePerLevel();
 
+        // GENERATE PARKING SPACE
+        for (int level = 1; level <= totalLevel; level++) {
+            for (int position = 1; position <= maxSpacePerLevel; position++) {
+                ParkingSpace parkingSpace = generateParkingSpace(parkingLot, level, position);
                 parkingSpaceList.add(parkingSpace);
             }
         }
+
+        // ADDITIONAL PARKING SPACE
+        int extraSpace = parkingLot.getCapacity() % parkingLot.getMaxSpacePerLevel();
+        if (extraSpace != 0) {
+            for (int position = 1; position <= extraSpace; position++) {
+                ParkingSpace parkingSpace = generateParkingSpace(parkingLot, totalLevel + 1, position);
+                parkingSpaceList.add(parkingSpace);
+            }
+        }
+
         parkingSpaceRepository.saveAll(parkingSpaceList);
         return parkingSpaceList;
     }
 
-    public ParkingLot findSpecificParkingLot(String parkingLotName) throws NotFoundException {
+    private ParkingSpace generateParkingSpace(ParkingLot parkingLot, int level, int position) {
+        ParkingSpace parkingSpace = new ParkingSpace();
+        parkingSpace.setParkingLevel(level);
+        parkingSpace.setParkingPosition(String.valueOf(PARKING_LOT_ROW[level - 1]) + position);
+        parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
+        parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
+        parkingSpace.setOccupied(false);
+        return parkingSpace;
+    }
 
+    public ParkingLot findSpecificParkingLot(String parkingLotName) throws NotFoundException {
         ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
 
         if (isNull(parkingLot)) {
@@ -75,7 +97,6 @@ public class ParkingLotService {
         }
 
         return parkingLot;
-
     }
 
     private List<ParkingSpace> updateParkingSpaceList(ParkingLot parkingLot, List<ParkingSpace> parkingSpaceList) {
@@ -94,9 +115,9 @@ public class ParkingLotService {
 
     private StringBuilder getParkingLotNameBuilder(ParkingLot parkingLot) {
         StringBuilder parkingLotNameBuilder = new StringBuilder();
-        for (final char c : parkingLot.getParkingLotName().toCharArray())
-            if (Character.isUpperCase(c) || Character.isDigit(c))
-                parkingLotNameBuilder.append(c);
+        for (final char id : parkingLot.getParkingLotName().toCharArray())
+            if (Character.isUpperCase(id) || Character.isDigit(id))
+                parkingLotNameBuilder.append(id);
 
         return parkingLotNameBuilder;
     }
