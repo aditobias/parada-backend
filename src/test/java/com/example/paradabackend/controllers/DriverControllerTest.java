@@ -2,7 +2,9 @@ package com.example.paradabackend.controllers;
 
 import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
+import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.services.DriverService;
+import com.example.paradabackend.services.ParkingTransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -35,6 +43,9 @@ public class DriverControllerTest {
 
     @MockBean
     private DriverService driverService;
+
+    @MockBean
+    private ParkingTransactionService parkingTransactionService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -135,6 +146,28 @@ public class DriverControllerTest {
                     .content(objectMapper.writeValueAsString(driver))
         );
 
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_get_all_parking_transaction_when_found() throws Exception {
+        ParkingTransaction addParkingTransaction = new ParkingTransaction();
+        addParkingTransaction.setUsername("tintin");
+
+        List<ParkingTransaction> parkingTransactionList = new ArrayList<>();
+        parkingTransactionList.add(addParkingTransaction);
+
+        when(parkingTransactionService.findAllByUsername("tintin")).thenReturn(parkingTransactionList);
+        ResultActions result = mvc.perform(get("/drivers/tintin/parking_transaction")
+                .contentType(MediaType.APPLICATION_JSON));
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void should_get_all_parking_transaction_when_not_found() throws Exception {
+
+        when(parkingTransactionService.findAllByUsername(anyString())).thenThrow(new NotFoundException("No transaction found!"));
+        ResultActions result = mvc.perform(get("/drivers/tintin/parking_transaction"));
         result.andExpect(status().isNotFound());
     }
 

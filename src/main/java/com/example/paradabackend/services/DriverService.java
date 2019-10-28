@@ -3,6 +3,7 @@ package com.example.paradabackend.services;
 import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.repositories.DriverRepository;
+import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 public class DriverService {
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private ParkingTransactionRepository parkingTransactionRepository;
 
     public Driver findByUsernameAndPassword(DriverCredentials driverCredentials) {
         Driver foundDriver = driverRepository
@@ -37,6 +41,5 @@ public class DriverService {
         }
         return foundDriver;
     }
-
 
 }

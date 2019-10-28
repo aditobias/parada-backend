@@ -2,17 +2,27 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.dtos.DriverCredentials;
 import com.example.paradabackend.entities.Driver;
+import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.DriverRepository;
+import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 public class DriverServiceTest {
@@ -22,6 +32,12 @@ public class DriverServiceTest {
 
     @MockBean
     private DriverRepository driverRepository;
+
+    @MockBean
+    private ParkingTransactionRepository parkingTransactionRepository;
+
+    @MockBean
+    private ParkingTransactionService parkingTransactionService;
 
     @Test
     public void should_find_Driver_by_username_and_password() {
