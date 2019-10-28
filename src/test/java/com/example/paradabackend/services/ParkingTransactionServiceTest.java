@@ -8,6 +8,7 @@ import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -62,7 +65,7 @@ public class ParkingTransactionServiceTest {
         parkingTransactionAdded.setUsername("Gray");
         parkingTransactionAdded.setParkingPosition("1A1");
 
-        MatcherAssert.assertThat(parkingTransactionAdded, is(parkingTransaction));
+        assertThat(parkingTransactionAdded, is(parkingTransaction));
     }
 
     @Test
@@ -74,8 +77,7 @@ public class ParkingTransactionServiceTest {
 
         ParkingTransaction foundTransaction = parkingTransactionService.findTransactionById(1L);
 
-        MatcherAssert.assertThat(parkingTransaction, is(foundTransaction));
-
+        assertThat(parkingTransaction, is(foundTransaction));
     }
 
     @Test
@@ -90,22 +92,30 @@ public class ParkingTransactionServiceTest {
 
         Page<ParkingTransaction> transactionPage = parkingTransactionService.findAllTransactions(0,5);
 
-        MatcherAssert.assertThat(transactionPage.getContent(), is(listOfTransactions));
+        assertThat(transactionPage.getContent(), is(listOfTransactions));
     }
 
     @Test
     public void should_create_receipt_given_transaction_id() {
-
         ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
-        Receipt receipt = new Receipt();
 
         when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
 
-        ParkingTransaction receiptFromThisTransaction =
-                parkingTransactionService.findTransactionById(1L);
+        Receipt receipt =
+                parkingTransactionService.createReceiptFromTransactionId(1L);
 
-        MatcherAssert.assertThat(parkingTransaction, is(receiptFromThisTransaction));
+        assertThat(receipt.getParkingTransaction(), is(parkingTransaction));
+    }
 
+    @Test
+    public void should_throw_IllegalArgumentException_when_create_receipt_given_invalid_transaction_id() {
+        when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            parkingTransactionService.createReceiptFromTransactionId(1L);
+        });
+
+        assertThat(exception.getMessage(), is("No transaction found!"));
     }
 }
 
