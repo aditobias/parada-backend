@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 public class ParkingTransaction {
@@ -119,5 +120,28 @@ public class ParkingTransaction {
 
     public void setIsPaid(String isPaid) {
         this.isPaid = isPaid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParkingTransaction that = (ParkingTransaction) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(parkingLotName, that.parkingLotName) &&
+                Objects.equals(parkingLevel, that.parkingLevel) &&
+                Objects.equals(parkingPosition, that.parkingPosition) &&
+                Objects.equals(isOccupied, that.isOccupied) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(voided, that.voided) &&
+                Objects.equals(creationDateTime, that.creationDateTime) &&
+                Objects.equals(closedDateTime, that.closedDateTime) &&
+                Objects.equals(isPaid, that.isPaid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, isOccupied, price, voided, creationDateTime, closedDateTime, isPaid);
     }
 }
