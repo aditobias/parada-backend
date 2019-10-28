@@ -30,11 +30,10 @@ public class ParkingLotService {
 
     public ParkingLot addParkingLot(ParkingLot parkingLot) throws Exception {
 
+        ParkingLot parkingLotName = parkingLotRepository.findByParkingLotName(parkingLot.getParkingLotName());
         if (isNull(parkingLot.getParkingLotName())) {
             throw new IllegalArgumentException("No parking lot name!");
         }
-
-        ParkingLot parkingLotName = parkingLotRepository.findByParkingLotName(parkingLot.getParkingLotName());
 
         if (!isNull(parkingLotName)) {
             throw new IllegalArgumentException(parkingLot.getParkingLotName() + " already exists!");
@@ -56,15 +55,8 @@ public class ParkingLotService {
         int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
         List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
-        int maxSpacePerLevel = parkingLot.getMaxSpacePerLevel();
-
         // GENERATE PARKING SPACE
-        for (int level = 1; level <= totalLevel; level++) {
-            for (int position = 1; position <= maxSpacePerLevel; position++) {
-                ParkingSpace parkingSpace = generateParkingSpace(parkingLot, level, position);
-                parkingSpaceList.add(parkingSpace);
-            }
-        }
+        generateTotalParkingSpace(parkingLot, parkingSpaceList);
 
         // ADDITIONAL PARKING SPACE
         int extraSpace = parkingLot.getCapacity() % parkingLot.getMaxSpacePerLevel();
@@ -79,7 +71,19 @@ public class ParkingLotService {
         return parkingSpaceList;
     }
 
-    private ParkingSpace generateParkingSpace(ParkingLot parkingLot, int level, int position) {
+    public void generateTotalParkingSpace(ParkingLot parkingLot, List<ParkingSpace> parkingSpaceList) {
+        int totalLevel = parkingLot.getCapacity() / parkingLot.getMaxSpacePerLevel();
+        int maxSpacePerLevel = parkingLot.getMaxSpacePerLevel();
+
+        for (int level = 1; level <= totalLevel; level++) {
+            for (int position = 1; position <= maxSpacePerLevel; position++) {
+                ParkingSpace parkingSpace = generateParkingSpace(parkingLot, level, position);
+                parkingSpaceList.add(parkingSpace);
+            }
+        }
+    }
+
+    public ParkingSpace generateParkingSpace(ParkingLot parkingLot, int level, int position) {
         ParkingSpace parkingSpace = new ParkingSpace();
         parkingSpace.setParkingLevel(level);
         parkingSpace.setParkingPosition(String.valueOf(PARKING_LOT_ROW[level - 1]) + position);

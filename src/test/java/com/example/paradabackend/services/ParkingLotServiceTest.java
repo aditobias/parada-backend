@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,9 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class ParkingLotServiceTest {
+
+    private static final int MAX_PARKING_ROW = 26;
+    private static final int POSITION = 9;
 
     @Autowired
     private ParkingLotService parkingLotService;
@@ -115,6 +119,8 @@ public class ParkingLotServiceTest {
     @Test
     void should_generate_parking_spaces_when_given_parking_lot_capacity() throws Exception {
         ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+        myParkingLot.setCapacity(2);
+        myParkingLot.setMaxSpacePerLevel(1);
 
         when(parkingLotRepository.save(myParkingLot)).thenReturn(myParkingLot);
 
@@ -185,12 +191,43 @@ public class ParkingLotServiceTest {
                 "D1")));
     }
 
+    @Test
+    void should_generate_parking_space() {
+        String parkingLotName = "ParkingLot Test";
+
+        ParkingLot myParkingLot = new ParkingLot();
+        myParkingLot.setParkingLotName(parkingLotName);
+
+        ParkingSpace actualParkingSpace = parkingLotService.generateParkingSpace(myParkingLot, MAX_PARKING_ROW, 9);
+
+        ParkingSpace expectedParkingSpace = new ParkingSpace();
+        expectedParkingSpace.setId("PLT-26Z9");
+        expectedParkingSpace.setParkingLotName(parkingLotName);
+        expectedParkingSpace.setParkingPosition("Z9");
+        expectedParkingSpace.setParkingLevel(26);
+        expectedParkingSpace.setOccupied(false);
+
+        assertThat(actualParkingSpace, is(expectedParkingSpace));
+    }
+
+    //    @Test
+//    void should_generate_total_parking_space() {
+//        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+//        List<ParkingSpace> parkingSpaceList = new ArrayList<>();
+//
+//        parkingLotService.generateTotalParkingSpace(myParkingLot, parkingSpaceList);
+//
+//        assertThat(parkingSpaceList, is(Arrays.asList(
+//
+//        )));
+//    }
+
     private ParkingLot dummyParkingLot(String parkingLotName) {
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setParkingLotName(parkingLotName);
         parkingLot.setLocation("Manila");
-        parkingLot.setCapacity(2);
-        parkingLot.setMaxSpacePerLevel(1);
+        parkingLot.setCapacity(5);
+        parkingLot.setMaxSpacePerLevel(5);
         parkingLot.setFlatRate(50);
         parkingLot.setRatePerHour(50);
         parkingLot.setSucceedingHourRate(15);

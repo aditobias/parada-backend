@@ -3,6 +3,7 @@ package com.example.paradabackend.entities;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 public class ParkingSpace {
@@ -81,4 +82,23 @@ public class ParkingSpace {
         this.endTime = endTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParkingSpace that = (ParkingSpace) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(parkingLotName, that.parkingLotName) &&
+                Objects.equals(parkingLevel, that.parkingLevel) &&
+                Objects.equals(parkingPosition, that.parkingPosition) &&
+                Objects.equals(isOccupied, that.isOccupied) &&
+                Objects.equals(reserveTime, that.reserveTime) &&
+                Objects.equals(startTime, that.startTime) &&
+                Objects.equals(endTime, that.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, parkingLotName, parkingLevel, parkingPosition, isOccupied, reserveTime, startTime, endTime);
+    }
 }
