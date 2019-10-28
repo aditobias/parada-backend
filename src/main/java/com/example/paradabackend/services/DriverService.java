@@ -40,19 +40,19 @@ public class DriverService {
 
 
     public Driver editDriverProfile(String username, Driver driver) throws NotFoundException {
-        Driver foundDriver = driverRepository.findByUsername(username);
-        if (foundDriver == null ) {
+        Driver existingDriver = driverRepository.findByUsername(username);
+        if (existingDriver == null ) {
             throw new NotFoundException("No driver profile.");
         }
 
-        foundDriver.setUsername(driver.getUsername());
-        foundDriver.setPassword(driver.getPassword());
-        foundDriver.setEmail(driver.getEmail());
-        foundDriver.setFirstName(driver.getEmail());
-        foundDriver.setLastName(driver.getLastName());
-        foundDriver.setMobileNumber(driver.getMobileNumber());
-        foundDriver.setProfilePicture(driver.getProfilePicture());
+        existingDriver.setUsername(driver.getUsername());
+        existingDriver.setPassword(driver.getPassword());
+        existingDriver.setEmail(driver.getEmail());
+        existingDriver.setFirstName(driver.getEmail());
+        existingDriver.setLastName(driver.getLastName());
+        existingDriver.setMobileNumber(driver.getMobileNumber());
+        existingDriver.setProfilePicture(driver.getProfilePicture());
 
-        return driverRepository.save(foundDriver);
+        return driverRepository.save(existingDriver);
     }
 }
