@@ -1,5 +1,6 @@
 package com.example.paradabackend.services;
 
+import com.example.paradabackend.dtos.Receipt;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
@@ -26,17 +27,18 @@ public class ParkingTransactionService {
     @Autowired
     ParkingLotRepository parkingLotRepository;
 
-    private ParkingSpace parkingSpace;
 
-    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId, ParkingTransaction parkingTransaction) {
+    public ParkingTransaction addParkingTransaction(String parkingLotName, String parkingSpaceId) {
 
         Optional<ParkingSpace> parkingSpaceFound = parkingSpaceRepository.findById(parkingSpaceId);
 
         if (parkingSpaceFound.isPresent()) {
+            ParkingTransaction parkingTransaction = new ParkingTransaction();
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
             parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
+
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setVoided("NotVoided");
@@ -47,6 +49,13 @@ public class ParkingTransactionService {
         return null;
     }
 
+
+    public Receipt createReceiptFromTransactionId(long id) {
+        ParkingTransaction transactionById = findTransactionById(id);
+        Receipt receipt = new Receipt();
+        receipt.setParkingTransaction(transactionById);
+        return receipt;
+    }
 
     public ParkingTransaction findTransactionById(long id) {
         Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(id);

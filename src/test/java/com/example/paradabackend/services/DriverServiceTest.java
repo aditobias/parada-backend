@@ -42,17 +42,18 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void should_post_new_Driver() {
+    public void should_post_new_Driver() throws NotFoundException {
         Driver driver = new Driver("driver");
         driver.setPassword("password");
         driver.setFirstName("jed");
 
-        when(driverRepository.save(driver)).thenReturn(driver);
+        when(driverService.save(driver)).thenReturn(driver);
 
         Driver foundDriver = driverService.save(driver);
 
         MatcherAssert.assertThat(driver, is(foundDriver));
     }
+
 
     @Test
     public void should_return_driver_profile() throws NotFoundException {

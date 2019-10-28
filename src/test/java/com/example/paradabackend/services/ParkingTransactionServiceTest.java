@@ -1,5 +1,6 @@
 package com.example.paradabackend.services;
 
+import com.example.paradabackend.dtos.Receipt;
 import com.example.paradabackend.entities.ParkingLot;
 import com.example.paradabackend.entities.ParkingSpace;
 import com.example.paradabackend.entities.ParkingTransaction;
@@ -80,6 +81,20 @@ public class ParkingTransactionServiceTest {
         Iterable<ParkingTransaction>  foundTransaction = parkingTransactionService.findAllTransactions(0,5);
 
         MatcherAssert.assertThat(listOfTransactions, is(foundTransaction));
+    }
+
+    @Test
+    public void should_create_receipt_given_transaction_id() {
+
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
+        Receipt receipt = new Receipt();
+
+        when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
+
+        ParkingTransaction receiptFromThisTransaction =
+                parkingTransactionService.findTransactionById(1L);
+
+        MatcherAssert.assertThat(parkingTransaction, is(receiptFromThisTransaction));
 
     }
 }

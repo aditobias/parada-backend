@@ -48,6 +48,7 @@ public class ParkingLotControllerTest {
         parkingLot.setLocation("Manila");
         parkingLot.setRatePerHour(50);
         parkingLot.setSucceedingHourRate(15);
+        parkingLot.setMaxSpacePerLevel(1);
         parkingLot.setCapacity(2);
 
         return parkingLot;
