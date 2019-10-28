@@ -54,7 +54,7 @@ public class ParkingTransactionControllerTest {
 
         parkingTransaction.setParkingLotName(parkingLot.getParkingLotName());
 
-        when(parkingTransactionService.addParkingTransaction(eq("parkingLot1") , eq("PL1-1A1") )).
+        when(parkingTransactionService.addParkingTransaction(eq("parkingLot1") , eq("PL1-1A1") , any())).
                 thenReturn(parkingTransaction);
 
         ResultActions result = mvc.perform(post("/parkingLots/parkingLot1/transactions/parkingSpace/PL1-1A1")
