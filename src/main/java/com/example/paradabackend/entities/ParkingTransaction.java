@@ -23,7 +23,7 @@ public class ParkingTransaction {
     }
 
     private Timestamp closedDateTime;
-    private String isPaid;
+    private Boolean isPaid;
 
     public ParkingTransaction(String username, String parkingLotName, String parkingPosition) {
         this.username = username;
@@ -111,11 +111,11 @@ public class ParkingTransaction {
         this.closedDateTime = closedDateTime;
     }
 
-    public String getIsPaid() {
+    public Boolean getIsPaid() {
         return isPaid;
     }
 
-    public void setIsPaid(String isPaid) {
+    public void setIsPaid(Boolean isPaid) {
         this.isPaid = isPaid;
     }
 

@@ -16,4 +16,7 @@ public interface ParkingTransactionRepository extends JpaRepository<ParkingTrans
 
     List<ParkingTransaction> findAllByUsername(String username);
 
+    ParkingTransaction findByParkingLotNameAndParkingLevelAndParkingPosition(String parkingLotName,
+                                                                             Integer parkingLevel,
+                                                                             String parkingPosition);
 }
