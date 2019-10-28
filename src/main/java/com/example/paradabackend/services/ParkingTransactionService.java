@@ -8,6 +8,7 @@ import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,7 @@ public class ParkingTransactionService {
         return parkingTransaction.get();
     }
 
-    public Iterable<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
+    public Page<ParkingTransaction> findAllTransactions(Integer page , Integer pageSize) {
         return parkingTransactionRepository.findAll(PageRequest.of(page , pageSize));
     }
 }
