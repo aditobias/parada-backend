@@ -33,9 +33,8 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(driver.getEmail());
         message.setSubject("Welcome to Parada!");
-        message.setText( "Please use this key for verification! "
-                + generatedSecurityKey);
-
+        message.setText( "To confirm your account, please click here : "
+                + "http://10.222.112.155:8080/sendEmail/" + generatedSecurityKey  );
         emailSender.send(message);
 
         return message;

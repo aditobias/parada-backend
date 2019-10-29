@@ -22,7 +22,7 @@ public class EmailController {
         return "Email sent successfully";
     }
 
-    @PatchMapping(value= "/{generatedKey}" ,consumes = {"application/json"})
+    @RequestMapping(value= "/{generatedKey}")
     @ResponseStatus(code = HttpStatus.OK)
     public String updateToIsVerified(@PathVariable String generatedKey) throws NotFoundException {
         emailService.updateToIsVerified(generatedKey);
