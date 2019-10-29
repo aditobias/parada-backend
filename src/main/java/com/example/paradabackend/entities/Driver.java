@@ -16,6 +16,7 @@ public class Driver {
     private String mobileNumber;
     private String emailVerificationStatus;
     private String profilePicture;
+    private String driverType;
 
     public Driver() {
     }
@@ -88,6 +89,14 @@ public class Driver {
         this.profilePicture = profilePicture;
     }
 
+    public String getDriverType() {
+        return driverType;
+    }
+
+    public void setDriverType(String driverType) {
+        this.driverType = driverType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,11 +109,12 @@ public class Driver {
                 Objects.equals(email, driver.email) &&
                 Objects.equals(mobileNumber, driver.mobileNumber) &&
                 Objects.equals(emailVerificationStatus, driver.emailVerificationStatus) &&
-                Objects.equals(profilePicture, driver.profilePicture);
+                Objects.equals(profilePicture, driver.profilePicture) &&
+                Objects.equals(driverType, driver.driverType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, firstName, lastName, email, mobileNumber, emailVerificationStatus, profilePicture);
+        return Objects.hash(username, password, firstName, lastName, email, mobileNumber, emailVerificationStatus, profilePicture, driverType);
     }
 }
