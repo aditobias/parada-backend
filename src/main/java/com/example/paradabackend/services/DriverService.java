@@ -78,7 +78,7 @@ public class DriverService {
         existingDriver.setUsername(driver.getUsername());
         existingDriver.setPassword(driver.getPassword());
         existingDriver.setEmail(driver.getEmail());
-        existingDriver.setFirstName(driver.getEmail());
+        existingDriver.setFirstName(driver.getFirstName());
         existingDriver.setLastName(driver.getLastName());
         existingDriver.setMobileNumber(driver.getMobileNumber());
         existingDriver.setProfilePicture(driver.getProfilePicture());
