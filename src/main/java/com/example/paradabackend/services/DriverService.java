@@ -74,9 +74,7 @@ public class DriverService {
         if (existingDriver == null ) {
             throw new NotFoundException("No driver profile.");
         }
-
-        existingDriver.setUsername(driver.getUsername());
-        existingDriver.setPassword(driver.getPassword());
+        
         existingDriver.setEmail(driver.getEmail());
         existingDriver.setFirstName(driver.getFirstName());
         existingDriver.setLastName(driver.getLastName());
