@@ -2,6 +2,7 @@ package com.example.paradabackend.services;
 
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.repositories.DriverRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,33 +12,41 @@ import java.util.UUID;
 
 @Component
 public class EmailService {
-
     @Autowired
     private JavaMailSender emailSender;
 
     @Autowired
     private DriverRepository driverRepository;
 
-    public void sendEmail ( Driver driver) {
-        SimpleMailMessage message = new SimpleMailMessage();
+    @Autowired
+    private DriverService driverService;
+
+    public SimpleMailMessage sendEmail (Driver driver) throws NotFoundException {
         UUID uuid = UUID.randomUUID();
         String generatedSecurityKey = uuid.toString();
 
-        Driver foundDriver = new Driver();
-        driverRepository.findByUsername(driver.getUsername());
+        Driver foundDriver = driverService.findDriverProfile(driver.getUsername());
+        foundDriver.setVerificationKey(generatedSecurityKey);
+        foundDriver.setVerified(false);
+        driverRepository.save(foundDriver);
 
-        if(foundDriver != null) {
-            foundDriver.setUsername(driver.getUsername());
-            foundDriver.setVerificationKey(generatedSecurityKey);
-            foundDriver.setVerified(false);
-            driverRepository.save(foundDriver);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(driver.getEmail());
+        message.setSubject("Welcome to Parada!");
+        message.setText( "Please use this key for verification! "
+                + generatedSecurityKey);
 
-            message.setTo(driver.getEmail());
-            message.setSubject("Welcome to Parada!");
-            message.setText( "Please use this key for verification! "
-                    + generatedSecurityKey);
+        emailSender.send(message);
 
-            emailSender.send(message);
+        return message;
+    }
+
+    public void updateToIsVerified(String generatedKey)  throws NotFoundException  {
+        Driver foundDriver = driverRepository.findByVerificationKey(generatedKey);
+        if(foundDriver == null) {
+            throw new NotFoundException("No generated security key.");
         }
+        foundDriver.setVerified(true);
+        driverRepository.save(foundDriver);
     }
 }
