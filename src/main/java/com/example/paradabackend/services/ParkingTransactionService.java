@@ -122,22 +122,21 @@ public class ParkingTransactionService {
 
     public ParkingTransaction updateStatusToCancelledWhenCancel(Long transactionId) throws NotFoundException {
         ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
-        if(!isNull(parkingTransaction)) {
-            ParkingSpace parkingSpace = parkingSpaceRepository
-                    .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
-                            , parkingTransaction.getParkingPosition());
-            parkingSpace.setOccupied(true);
+        ParkingSpace parkingSpace = parkingSpaceRepository
+                .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
+                        , parkingTransaction.getParkingPosition());
+        parkingSpace.setOccupied(true);
 
-            ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
-            Integer newAvailableSpaces = parkingLot.getAvailableSpaces() + 1;
-            parkingLot.setAvailableSpaces(newAvailableSpaces);
-            parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
-            parkingTransaction.setStatus("Cancelled");
+        ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
+        Integer newAvailableSpaces = parkingLot.getAvailableSpaces() + 1;
+        parkingLot.setAvailableSpaces(newAvailableSpaces);
+        parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+        parkingTransaction.setStatus("Cancelled");
 
-            parkingLotRepository.save(parkingLot);
-            parkingSpaceRepository.save(parkingSpace);
-            parkingTransactionRepository.save(parkingTransaction);
-        }
-        return null;
+        parkingLotRepository.save(parkingLot);
+        parkingSpaceRepository.save(parkingSpace);
+
+        return parkingTransactionRepository.save(parkingTransaction);
+
     }
 }
