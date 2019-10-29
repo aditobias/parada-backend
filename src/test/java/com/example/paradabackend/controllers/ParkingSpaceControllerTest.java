@@ -111,22 +111,4 @@ public class ParkingSpaceControllerTest {
                 .andExpect(jsonPath("$.occupied", is(true)));
     }
 
-    @Test
-    void should_update_start_time_of_parking_space_given_paid() throws Exception {
-        ParkingSpace parkingSpace = new ParkingSpace();
-        parkingSpace.setStartTime(new Timestamp(System.currentTimeMillis()));
-
-        when(parkingSpaceService.updateStartTimeWhenPaid(any())).thenReturn(parkingSpace);
-
-        ParkingSpace oldParkingSpace = new ParkingSpace();
-
-        ResultActions resultOfExecution = mvc.perform(patch("/parkingLots/parkingLot/parkingSpace/{parkingSpaceId}/enter", "PL10-1A1")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(oldParkingSpace)));
-
-        resultOfExecution.andExpect(status().isOk())
-                            .andExpect(jsonPath("$.startTime", is(parkingSpace.getStartTime().getTime())));
-
-    }
 }
