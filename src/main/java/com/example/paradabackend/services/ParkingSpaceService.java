@@ -97,7 +97,6 @@ public class ParkingSpaceService {
         if (parkingSpaceToOccupy.isPresent()) {
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpaceToOccupy.get().getParkingLotName());
             parkingSpaceToOccupy.get().setOccupied(true);
-            parkingSpaceToOccupy.get().setReserveTime(new Timestamp(new Date().getTime()));
 
             long occupiedParkingSpaces = getOccupiedParkingSpaces(parkingLot);
             parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));
@@ -109,25 +108,6 @@ public class ParkingSpaceService {
 
     public List<ParkingSpace> findAllByParkingLotName(String parkingLotName) {
         return parkingSpaceRepository.findAllByParkingLotName(parkingLotName);
-    }
-
-    public ParkingSpace updateStartTimeWhenPaid(String parkingSpaceId) {
-        Optional<ParkingSpace> foundParkingSpace = parkingSpaceRepository.findById(parkingSpaceId);
-
-        if (foundParkingSpace.isPresent()) {
-            ParkingTransaction parkingTransaction = parkingTransactionRepository
-                    .findByParkingLotNameAndParkingLevelAndParkingPosition(
-                            foundParkingSpace.get().getParkingLotName(),
-                            foundParkingSpace.get().getParkingLevel(),
-                            foundParkingSpace.get().getParkingPosition());
-
-            foundParkingSpace.get().setStartTime(new Timestamp(System.currentTimeMillis()));
-            parkingTransaction.setIsPaid(true);
-            parkingTransactionRepository.save(parkingTransaction);
-
-            return parkingSpaceRepository.save(foundParkingSpace.get());
-        }
-        return null;
     }
 
 }
