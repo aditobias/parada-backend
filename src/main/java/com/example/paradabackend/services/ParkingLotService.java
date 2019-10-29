@@ -54,10 +54,8 @@ public class ParkingLotService {
     public List<ParkingSpace> generateParkingSpace(ParkingLot parkingLot) {
         List<ParkingSpace> parkingSpaceList = new ArrayList<>();
 
-        // GENERATE PARKING SPACE
         generateTotalParkingSpace(parkingLot, parkingSpaceList);
 
-        // ADDITIONAL PARKING SPACE
         generateAdditionalParkingSpace(parkingLot, parkingSpaceList);
 
         parkingSpaceRepository.saveAll(parkingSpaceList);
@@ -98,7 +96,6 @@ public class ParkingLotService {
         parkingSpace.setId(getGeneratedIdForParkingSpace(parkingLot, parkingSpace));
         parkingSpace.setParkingLotName(parkingLot.getParkingLotName());
         parkingSpace.setOccupied(false);
-
 
         return parkingSpace;
     }
