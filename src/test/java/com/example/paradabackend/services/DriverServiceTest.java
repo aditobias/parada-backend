@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -129,14 +130,29 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void should_throw_exception_when_DriverType_is_empty() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-        {
-            Driver driver = createDriver();
-            driver.setDriverType("");
-            driverService.save(driver);
-        });
-        assertThat(exception.getMessage(), is("Driver type cannot be empty"));
+    public void should_set_default_value_to_driverType_and_verified_when_empty() {
+        Driver driverWithDefaults = createDriver();
+        driverWithDefaults.setDriverType("user");
+        driverWithDefaults.setVerified(false);
+        when(driverRepository.save(any(Driver.class))).thenReturn(driverWithDefaults);
+
+        Driver savedDriver = driverService.save(createDriver());
+        assertThat(savedDriver.getDriverType(), is("user"));
+        assertThat(savedDriver.getVerified(), is(false));
+    }
+
+    @Test
+    public void should_not_update_driverType_when_has_existing_value() {
+        String driverType = "admin";
+
+        Driver driver = createDriver();
+        driver.setDriverType(driverType);
+
+        when(driverRepository.save(any(Driver.class))).thenReturn(driver);
+
+        Driver savedDriver = driverService.save(createDriver());
+
+        assertThat(savedDriver.getDriverType(), is(driverType));
     }
 
     @Test

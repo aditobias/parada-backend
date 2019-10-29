@@ -29,14 +29,18 @@ public class DriverService {
     }
 
     public Driver save(Driver driver) {
+        if(isNullOfEmpty(driver.getDriverType())){
+            driver.setDriverType("user");
+        }
+
+        driver.setVerified(false);
+
         requireNotNullOrEmpty(driver.getUsername(), "Username cannot be empty");
         requireNotNullOrEmpty(driver.getPassword(), "Password cannot be empty");
         requireNotNullOrEmpty(driver.getFirstName(), "First name cannot be empty");
         requireNotNullOrEmpty(driver.getLastName(), "Last name cannot be empty");
         requireNotNullOrEmpty(driver.getEmail(), "Email cannot be empty");
         requireNotNullOrEmpty(driver.getMobileNumber(), "Mobile number cannot be empty");
-        requireNotNullOrEmpty(driver.getDriverType(), "Driver type cannot be empty");
-
 //        requireNotNullOrEmpty(driver.getProfilePicture(), "Profile picture cannot be empty");
 
         Driver existingDriver = driverRepository.findByUsername(driver.getUsername());
@@ -47,9 +51,13 @@ public class DriverService {
     }
 
     private void requireNotNullOrEmpty(String field, String errorMessage) {
-        if(field == null || field.isEmpty()){
+        if(isNullOfEmpty(field)){
             throw new IllegalArgumentException(errorMessage);
         }
+    }
+
+    private boolean isNullOfEmpty(String field) {
+        return field == null || field.isEmpty();
     }
 
     public Driver findDriverProfile(String username) throws NotFoundException {
