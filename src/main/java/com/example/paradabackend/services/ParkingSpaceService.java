@@ -92,7 +92,6 @@ public class ParkingSpaceService {
         if (parkingSpaceToOccupy.isPresent()) {
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpaceToOccupy.get().getParkingLotName());
             parkingSpaceToOccupy.get().setOccupied(true);
-            parkingSpaceToOccupy.get().setReserveTime(new Timestamp(new Date().getTime()));
 
             long occupiedParkingSpaces = getOccupiedParkingSpaces(parkingLot);
             parkingLot.setAvailableSpaces(parkingLot.getCapacity() - Math.toIntExact(occupiedParkingSpaces));

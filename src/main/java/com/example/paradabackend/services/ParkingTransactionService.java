@@ -17,6 +17,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class ParkingTransactionService {
 
@@ -41,7 +43,7 @@ public class ParkingTransactionService {
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setVoided("NotVoided");
-            parkingTransaction.setCreationDateTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setReserveTime(new Timestamp(System.currentTimeMillis()));
 
             return parkingTransactionRepository.save(parkingTransaction);
         }
@@ -74,5 +76,46 @@ public class ParkingTransactionService {
             throw new NotFoundException("No transaction found!");
         }
         return getAllDriversTransaction;
+    }
+
+    public ParkingTransaction updateSpecificTransactionEnter(Long transactionId) throws NotFoundException {
+        ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
+
+        if(!isNull(parkingTransaction)){
+            parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setIsPaid(true);
+            return parkingTransactionRepository.save(parkingTransaction);
+        }
+        throw new NotFoundException("No transaction found!");
+    }
+
+    public ParkingTransaction fetchParkingTransaction(Long transactionId) throws NotFoundException {
+        Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(transactionId);
+        if(parkingTransaction.isPresent()){
+            return parkingTransaction.get();
+        }
+
+        throw new NotFoundException("No transaction found!");
+    }
+
+    public ParkingTransaction updateSpecificTransactionExit(Long transactionId) throws NotFoundException {
+        ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
+        if(!isNull(parkingTransaction)){
+            ParkingSpace parkingSpace = parkingSpaceRepository
+                    .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
+                            , parkingTransaction.getParkingPosition());
+            parkingSpace.setOccupied(false);
+
+            ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
+            Integer newCapacity = parkingLot.getCapacity() + 1;
+            parkingLot.setCapacity(newCapacity);
+            parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+
+            parkingLotRepository.save(parkingLot);
+            parkingSpaceRepository.save(parkingSpace);
+            parkingTransactionRepository.save(parkingTransaction);
+
+        }
+    return parkingTransaction;
     }
 }

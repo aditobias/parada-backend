@@ -14,9 +14,7 @@ public class ParkingSpace {
     private Integer parkingLevel;
     private String parkingPosition;
     private Boolean isOccupied;
-    private Timestamp reserveTime;
-    private Timestamp startTime;
-    private Timestamp endTime;
+
 
     public String getId() {
         return id;
@@ -58,29 +56,6 @@ public class ParkingSpace {
         isOccupied = occupied;
     }
 
-    public Timestamp getReserveTime() {
-        return reserveTime;
-    }
-
-    public void setReserveTime(Timestamp reserveTime) {
-        this.reserveTime = reserveTime;
-    }
-
-    public Timestamp getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
-    public Timestamp getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -91,14 +66,12 @@ public class ParkingSpace {
                 Objects.equals(parkingLotName, that.parkingLotName) &&
                 Objects.equals(parkingLevel, that.parkingLevel) &&
                 Objects.equals(parkingPosition, that.parkingPosition) &&
-                Objects.equals(isOccupied, that.isOccupied) &&
-                Objects.equals(reserveTime, that.reserveTime) &&
-                Objects.equals(startTime, that.startTime) &&
-                Objects.equals(endTime, that.endTime);
+                Objects.equals(isOccupied, that.isOccupied);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parkingLotName, parkingLevel, parkingPosition, isOccupied, reserveTime, startTime, endTime);
+        return Objects.hash(id, parkingLotName, parkingLevel, parkingPosition, isOccupied);
     }
 }
