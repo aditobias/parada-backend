@@ -17,7 +17,6 @@ public class Driver {
     private String lastName;
     private String email;
     private String mobileNumber;
-    private String emailVerificationStatus;
     private String profilePicture;
     private String driverType;
     private Boolean isVerified;
@@ -94,14 +93,6 @@ public class Driver {
         this.mobileNumber = mobileNumber;
     }
 
-    public String getEmailVerificationStatus() {
-        return emailVerificationStatus;
-    }
-
-    public void setEmailVerificationStatus(String emailVerificationStatus) {
-        this.emailVerificationStatus = emailVerificationStatus;
-    }
-
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -129,13 +120,14 @@ public class Driver {
                 Objects.equals(lastName, driver.lastName) &&
                 Objects.equals(email, driver.email) &&
                 Objects.equals(mobileNumber, driver.mobileNumber) &&
-                Objects.equals(emailVerificationStatus, driver.emailVerificationStatus) &&
                 Objects.equals(profilePicture, driver.profilePicture) &&
-                Objects.equals(driverType, driver.driverType);
+                Objects.equals(driverType, driver.driverType) &&
+                Objects.equals(isVerified, driver.isVerified) &&
+                Objects.equals(verificationKey, driver.verificationKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, firstName, lastName, email, mobileNumber, emailVerificationStatus, profilePicture, driverType);
+        return Objects.hash(username, password, firstName, lastName, email, mobileNumber, profilePicture, driverType, isVerified, verificationKey);
     }
 }
