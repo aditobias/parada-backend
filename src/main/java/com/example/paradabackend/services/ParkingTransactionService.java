@@ -39,7 +39,6 @@ public class ParkingTransactionService {
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
-            parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setReserveTime(new Timestamp(System.currentTimeMillis()));
