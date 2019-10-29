@@ -1,8 +1,11 @@
 package com.example.paradabackend.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Driver {
@@ -17,6 +20,24 @@ public class Driver {
     private String emailVerificationStatus;
     private String profilePicture;
     private String driverType;
+    private Boolean isVerified;
+    private String verificationKey;
+
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+    }
+
+    public String getVerificationKey() {
+        return verificationKey;
+    }
+
+    public void setVerificationKey(String verificationKey) {
+        this.verificationKey = verificationKey;
+    }
 
     public Driver() {
     }
