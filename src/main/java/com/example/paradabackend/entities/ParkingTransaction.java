@@ -14,10 +14,8 @@ public class ParkingTransaction {
     private String parkingLotName;
     private Integer parkingLevel;
     private String parkingPosition;
-    private Boolean isOccupied;
     private Integer price;
-    private String voided;
-    private Boolean isPaid;
+    private String status;
     private Timestamp reserveTime;
     private Timestamp startTime;
     private Timestamp endTime;
@@ -95,14 +93,6 @@ public class ParkingTransaction {
         this.parkingPosition = parkingPosition;
     }
 
-    public Boolean getOccupied() {
-        return isOccupied;
-    }
-
-    public void setOccupied(Boolean occupied) {
-        isOccupied = occupied;
-    }
-
     public Integer getPrice() {
         return price;
     }
@@ -111,21 +101,6 @@ public class ParkingTransaction {
         this.price = price;
     }
 
-    public String getVoided() {
-        return voided;
-    }
-
-    public void setVoided(String voided) {
-        this.voided = voided;
-    }
-
-    public Boolean getIsPaid() {
-        return isPaid;
-    }
-
-    public void setIsPaid(Boolean isPaid) {
-        this.isPaid = isPaid;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -137,17 +112,22 @@ public class ParkingTransaction {
                 Objects.equals(parkingLotName, that.parkingLotName) &&
                 Objects.equals(parkingLevel, that.parkingLevel) &&
                 Objects.equals(parkingPosition, that.parkingPosition) &&
-                Objects.equals(isOccupied, that.isOccupied) &&
                 Objects.equals(price, that.price) &&
-                Objects.equals(voided, that.voided) &&
                 Objects.equals(reserveTime, that.reserveTime) &&
                 Objects.equals(startTime, that.startTime) &&
-                Objects.equals(endTime, that.endTime) &&
-                Objects.equals(isPaid, that.isPaid);
+                Objects.equals(endTime, that.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, isOccupied, price, voided, reserveTime, startTime, endTime, isPaid);
+        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, price, reserveTime, startTime, endTime);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -43,4 +43,12 @@ public class ParkingTransactionController {
     public Receipt generateReceiptGivenTransactionId (@PathVariable Long transactionId) {
         return parkingTransactionService.createReceiptFromTransactionId(transactionId);
     }
+
+    @PatchMapping(path = "/{transactionId}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ParkingTransaction updateStatusToCancelled (@PathVariable Long transactionId) throws NotFoundException {
+        return parkingTransactionService.updateStatusToCancelledWhenCancel(transactionId);
+    }
+
+
 }
