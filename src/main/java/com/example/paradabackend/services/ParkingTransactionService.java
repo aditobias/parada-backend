@@ -42,7 +42,6 @@ public class ParkingTransactionService {
             parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
-            parkingTransaction.setVoided("NotVoided");
             parkingTransaction.setReserveTime(new Timestamp(System.currentTimeMillis()));
 
             return parkingTransactionRepository.save(parkingTransaction);
@@ -84,6 +83,7 @@ public class ParkingTransactionService {
         if(!isNull(parkingTransaction)){
             parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
             parkingTransaction.setIsPaid(true);
+
             return parkingTransactionRepository.save(parkingTransaction);
         }
         throw new NotFoundException("No transaction found!");
