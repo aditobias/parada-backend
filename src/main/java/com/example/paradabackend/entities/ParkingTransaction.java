@@ -16,7 +16,6 @@ public class ParkingTransaction {
     private String parkingPosition;
     private Integer price;
     private String status;
-    private Boolean isPaid;
     private Timestamp reserveTime;
     private Timestamp startTime;
     private Timestamp endTime;
@@ -102,13 +101,6 @@ public class ParkingTransaction {
         this.price = price;
     }
 
-    public Boolean getIsPaid() {
-        return isPaid;
-    }
-
-    public void setIsPaid(Boolean isPaid) {
-        this.isPaid = isPaid;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -123,13 +115,12 @@ public class ParkingTransaction {
                 Objects.equals(price, that.price) &&
                 Objects.equals(reserveTime, that.reserveTime) &&
                 Objects.equals(startTime, that.startTime) &&
-                Objects.equals(endTime, that.endTime) &&
-                Objects.equals(isPaid, that.isPaid);
+                Objects.equals(endTime, that.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, price, reserveTime, startTime, endTime, isPaid);
+        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, price, reserveTime, startTime, endTime);
     }
 
     public String getStatus() {
