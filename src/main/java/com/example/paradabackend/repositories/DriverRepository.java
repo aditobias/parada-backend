@@ -9,4 +9,7 @@ public interface DriverRepository extends JpaRepository<Driver, String> {
     Driver findByUsernameAndPassword(String username, String password);
 
     Driver findByUsername(String username);
+
+    Driver findByVerificationKey(String verificationKey);
 }
+

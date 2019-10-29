@@ -111,7 +111,6 @@ public class DriverControllerTest {
         driver.setLastName("Garcia");
         driver.setEmail("john.kenneth.garcia@oocl.com");
         driver.setMobileNumber("09123456789");
-        driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
 
 
@@ -135,7 +134,6 @@ public class DriverControllerTest {
         driver.setLastName("Garcia");
         driver.setEmail("john.kenneth.garcia@oocl.com");
         driver.setMobileNumber("09123456789");
-        driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
 
         doThrow(NotFoundException.class).when(driverService).findDriverProfile("kg96");
@@ -178,7 +176,6 @@ public class DriverControllerTest {
         driver.setLastName("Garcia");
         driver.setEmail("john.kenneth.garcia@oocl.com");
         driver.setMobileNumber("09123456789");
-        driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
 
         Driver editedDriver = new Driver("kg96");
@@ -187,7 +184,6 @@ public class DriverControllerTest {
         editedDriver.setLastName("Gar");
         editedDriver.setEmail("john@oocl.com");
         editedDriver.setMobileNumber("09123456780");
-        editedDriver.setEmailVerificationStatus("True");
         editedDriver.setProfilePicture("www.googlex.com");
 
         when(driverService.editDriverProfile("kg96", driver)).thenReturn(editedDriver);
@@ -210,7 +206,6 @@ public class DriverControllerTest {
         driver.setLastName("Garcia");
         driver.setEmail("john.kenneth.garcia@oocl.com");
         driver.setMobileNumber("09123456789");
-        driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
 
         doThrow(NotFoundException.class).when(driverService).editDriverProfile("kg96", driver);

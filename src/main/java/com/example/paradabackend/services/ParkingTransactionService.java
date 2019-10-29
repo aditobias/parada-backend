@@ -39,11 +39,10 @@ public class ParkingTransactionService {
             parkingTransaction.setParkingLotName(parkingSpaceFound.get().getParkingLotName());
             parkingTransaction.setParkingLevel(parkingSpaceFound.get().getParkingLevel());
             parkingTransaction.setParkingPosition(parkingSpaceFound.get().getParkingPosition());
-            parkingTransaction.setOccupied(parkingSpaceFound.get().isOccupied());
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
-            parkingTransaction.setVoided("NotVoided");
             parkingTransaction.setReserveTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setStatus("Reserved");
 
             return parkingTransactionRepository.save(parkingTransaction);
         }
@@ -83,7 +82,8 @@ public class ParkingTransactionService {
 
         if(!isNull(parkingTransaction)){
             parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
-            parkingTransaction.setIsPaid(true);
+            parkingTransaction.setStatus("Paid");
+
             return parkingTransactionRepository.save(parkingTransaction);
         }
         throw new NotFoundException("No transaction found!");
@@ -110,6 +110,7 @@ public class ParkingTransactionService {
             Integer newCapacity = parkingLot.getCapacity() + 1;
             parkingLot.setCapacity(newCapacity);
             parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setStatus("Closed");
 
             parkingLotRepository.save(parkingLot);
             parkingSpaceRepository.save(parkingSpace);
@@ -117,5 +118,25 @@ public class ParkingTransactionService {
 
         }
     return parkingTransaction;
+    }
+
+    public ParkingTransaction updateStatusToCancelledWhenCancel(Long transactionId) throws NotFoundException {
+        ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
+        ParkingSpace parkingSpace = parkingSpaceRepository
+                .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
+                        , parkingTransaction.getParkingPosition());
+        parkingSpace.setOccupied(true);
+
+        ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
+        Integer newAvailableSpaces = parkingLot.getAvailableSpaces() + 1;
+        parkingLot.setAvailableSpaces(newAvailableSpaces);
+        parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+        parkingTransaction.setStatus("Cancelled");
+
+        parkingLotRepository.save(parkingLot);
+        parkingSpaceRepository.save(parkingSpace);
+
+        return parkingTransactionRepository.save(parkingTransaction);
+
     }
 }
