@@ -128,7 +128,7 @@ public class DriverServiceTest {
         assertThat(exception.getMessage(), is("Mobile number cannot be empty"));
     }
 
-    @Ignore
+    @Test
     public void should_throw_exception_when_DriverType_is_empty() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
         {
