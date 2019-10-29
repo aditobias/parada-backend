@@ -1,24 +1,23 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.io.IOException;
 
 @RestController
+@RequestMapping("/sendEmail")
 public class EmailController {
 
     @Autowired
     private EmailService emailService;
 
-    @RequestMapping(value = "/sendemail")
-    public String sendEmail() {
-        emailService.sendSimpleMessage("m.grayjeanne@gmail.com", "Test", "TestEmail");
+    @PatchMapping(consumes = {"application/json"})
+    @ResponseStatus(code = HttpStatus.OK)
+    public String sendEmail(@RequestBody Driver driver) {
+        emailService.sendEmail( driver);
         return "Email sent successfully";
     }
 
