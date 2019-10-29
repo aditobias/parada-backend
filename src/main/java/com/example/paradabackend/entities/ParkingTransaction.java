@@ -28,6 +28,9 @@ public class ParkingTransaction {
         this.parkingPosition = parkingPosition;
     }
 
+    public ParkingTransaction(){
+    }
+
     public Timestamp getReserveTime() {
         return reserveTime;
     }

@@ -28,4 +28,9 @@ public class AdminController {
        return parkingTransactionService.updateSpecificTransactionEnter(transactionId);
     }
 
+    @PatchMapping(path = "/transaction/{transactionId}/exit", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ParkingTransaction updateTransactionWhenExit(@PathVariable Long transactionId) throws NotFoundException {
+        return parkingTransactionService.updateSpecificTransactionExit(transactionId);
+    }
 }

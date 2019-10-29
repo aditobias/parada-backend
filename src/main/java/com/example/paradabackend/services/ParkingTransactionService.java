@@ -98,4 +98,20 @@ public class ParkingTransactionService {
         throw new NotFoundException("No transaction found!");
     }
 
+    public ParkingTransaction updateSpecificTransactionExit(Long transactionId) throws NotFoundException {
+        ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
+        if(!isNull(parkingTransaction)){
+            ParkingSpace parkingSpace = parkingSpaceRepository
+                    .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
+                            , parkingTransaction.getParkingPosition());
+            parkingSpace.setOccupied(false);
+
+            ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
+            Integer newCapacity = parkingLot.getCapacity() + 1;
+            parkingLot.setCapacity(newCapacity);
+            parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+
+        }
+
+    }
 }
