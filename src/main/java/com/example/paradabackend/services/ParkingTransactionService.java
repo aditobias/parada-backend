@@ -17,6 +17,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class ParkingTransactionService {
 
@@ -41,7 +43,7 @@ public class ParkingTransactionService {
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setVoided("NotVoided");
-            parkingTransaction.setCreationDateTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setReserveTime(new Timestamp(System.currentTimeMillis()));
 
             return parkingTransactionRepository.save(parkingTransaction);
         }
@@ -75,4 +77,25 @@ public class ParkingTransactionService {
         }
         return getAllDriversTransaction;
     }
+
+    public ParkingTransaction updateSpecificTransactionEnter(Long transactionId) throws NotFoundException {
+        ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
+
+        if(!isNull(parkingTransaction)){
+            parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setIsPaid(true);
+            return parkingTransactionRepository.save(parkingTransaction);
+        }
+        throw new NotFoundException("No transaction found!");
+    }
+
+    public ParkingTransaction fetchParkingTransaction(Long transactionId) throws NotFoundException {
+        Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(transactionId);
+        if(parkingTransaction.isPresent()){
+            return parkingTransaction.get();
+        }
+
+        throw new NotFoundException("No transaction found!");
+    }
+
 }

@@ -48,12 +48,4 @@ public class ParkingSpaceController {
 
     }
 
-    @PatchMapping(value= "/{parkingSpaceId}/enter")
-    public ParkingSpace updateStartTimeWhenPaid(@PathVariable String parkingLotName,
-                                                @PathVariable String parkingSpaceId) {
-
-        ParkingSpace updateStartTime = parkingSpaceService.updateStartTimeWhenPaid(parkingSpaceId);
-        return updateStartTime;
-
-    }
 }

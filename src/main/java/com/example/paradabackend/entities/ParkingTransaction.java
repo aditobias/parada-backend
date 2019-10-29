@@ -17,18 +17,39 @@ public class ParkingTransaction {
     private Boolean isOccupied;
     private Integer price;
     private String voided;
-    private Timestamp creationDateTime;
-
-    public ParkingTransaction() {
-    }
-
-    private Timestamp closedDateTime;
     private Boolean isPaid;
+    private Timestamp reserveTime;
+    private Timestamp startTime;
+    private Timestamp endTime;
 
     public ParkingTransaction(String username, String parkingLotName, String parkingPosition) {
         this.username = username;
         this.parkingLotName = parkingLotName;
         this.parkingPosition = parkingPosition;
+    }
+
+    public Timestamp getReserveTime() {
+        return reserveTime;
+    }
+
+    public void setReserveTime(Timestamp reserveTime) {
+        this.reserveTime = reserveTime;
+    }
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
     }
 
     public Long getId() {
@@ -95,22 +116,6 @@ public class ParkingTransaction {
         this.voided = voided;
     }
 
-    public Timestamp getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(Timestamp creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
-
-    public Timestamp getClosedDateTime() {
-        return closedDateTime;
-    }
-
-    public void setClosedDateTime(Timestamp closedDateTime) {
-        this.closedDateTime = closedDateTime;
-    }
-
     public Boolean getIsPaid() {
         return isPaid;
     }
@@ -132,13 +137,14 @@ public class ParkingTransaction {
                 Objects.equals(isOccupied, that.isOccupied) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(voided, that.voided) &&
-                Objects.equals(creationDateTime, that.creationDateTime) &&
-                Objects.equals(closedDateTime, that.closedDateTime) &&
+                Objects.equals(reserveTime, that.reserveTime) &&
+                Objects.equals(startTime, that.startTime) &&
+                Objects.equals(endTime, that.endTime) &&
                 Objects.equals(isPaid, that.isPaid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, isOccupied, price, voided, creationDateTime, closedDateTime, isPaid);
+        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, isOccupied, price, voided, reserveTime, startTime, endTime, isPaid);
     }
 }
