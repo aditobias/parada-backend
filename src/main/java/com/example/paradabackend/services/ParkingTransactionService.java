@@ -83,6 +83,7 @@ public class ParkingTransactionService {
         if(!isNull(parkingTransaction)){
             parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
             parkingTransaction.setIsPaid(true);
+            parkingTransaction.setStatus("Paid");
 
             return parkingTransactionRepository.save(parkingTransaction);
         }
