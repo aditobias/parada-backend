@@ -8,6 +8,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DriverService {
     @Autowired
@@ -35,7 +37,6 @@ public class DriverService {
         requireNotNullOrEmpty(driver.getMobileNumber(), "Mobile number cannot be empty");
 //        requireNotNullOrEmpty(driver.getDriverType(), "Driver type cannot be empty");
 
-//        requireNotNullOrEmpty(driver.getEmailVerificationStatus(), "Email verification status cannot be empty");
 //        requireNotNullOrEmpty(driver.getProfilePicture(), "Profile picture cannot be empty");
 
         Driver existingDriver = driverRepository.findByUsername(driver.getUsername());
@@ -75,5 +76,27 @@ public class DriverService {
         existingDriver.setProfilePicture(driver.getProfilePicture());
 
         return driverRepository.save(existingDriver);
+    }
+
+    public Driver updateDriverAccessToAdmin(String username) throws NotFoundException {
+        Driver existingDriver = driverRepository.findByUsername(username);
+
+        if(existingDriver != null){
+            existingDriver.setDriverType("admin");
+
+            return driverRepository.save(existingDriver);
+        }
+        throw new NotFoundException("No driver profile");
+    }
+
+    public Driver updateDriverAccessToUser(String username) throws NotFoundException {
+        Driver existingDriver = driverRepository.findByUsername(username);
+
+        if(existingDriver != null){
+            existingDriver.setDriverType("user");
+
+            return driverRepository.save(existingDriver);
+        }
+        throw new NotFoundException("No driver profile");
     }
 }

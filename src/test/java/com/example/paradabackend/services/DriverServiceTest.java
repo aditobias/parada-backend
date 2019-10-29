@@ -182,7 +182,6 @@ public class DriverServiceTest {
         updatedDriver.setLastName("Gar");
         updatedDriver.setEmail("john@oocl.com");
         updatedDriver.setMobileNumber("09123456780");
-        updatedDriver.setEmailVerificationStatus("True");
         updatedDriver.setProfilePicture("www.googles.com");
 
         when(driverRepository.save(existingDriver)).thenReturn(updatedDriver);
@@ -205,7 +204,6 @@ public class DriverServiceTest {
         driver.setLastName("Garcia");
         driver.setEmail("john.kenneth.garcia@oocl.com");
         driver.setMobileNumber("09123456789");
-        driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
 
         driver.setDriverType("user");

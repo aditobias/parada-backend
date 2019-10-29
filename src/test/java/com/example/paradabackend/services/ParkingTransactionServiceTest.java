@@ -8,6 +8,7 @@ import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,7 +46,7 @@ public class ParkingTransactionServiceTest {
 
     @Test
     public void should_add_parking_transaction_when_reservation_confirmed() {
-        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
         String parkingSpaceID = "PA-1A1";
 
         ParkingSpace parkingSpace = new ParkingSpace();
@@ -57,7 +58,7 @@ public class ParkingTransactionServiceTest {
         when(parkingLotRepository.findByParkingLotName(parkingLot.getParkingLotName())).thenReturn(parkingLot);
         when(parkingTransactionRepository.save(eq(parkingTransaction))).thenReturn(parkingTransaction);
         ParkingTransaction parkingTransactionAdded =
-                parkingTransactionService.addParkingTransaction("ParkingLot1" , parkingSpaceID, parkingTransaction);
+                parkingTransactionService.addParkingTransaction("ParkingLot1", parkingSpaceID, parkingTransaction);
         ParkingSpace newParkingSpace = new ParkingSpace();
         newParkingSpace.setId(parkingSpaceID);
         ParkingLot newParkingLot = new ParkingLot();
@@ -69,8 +70,8 @@ public class ParkingTransactionServiceTest {
     }
 
     @Test
-    public void should_find_transaction_by_id () {
-        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
+    public void should_find_transaction_by_id() {
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
         parkingTransaction.setId(1L);
 
         when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
@@ -81,23 +82,23 @@ public class ParkingTransactionServiceTest {
     }
 
     @Test
-    public void should_return_all_parking_transactions () {
+    public void should_return_all_parking_transactions() {
         List<ParkingTransaction> listOfTransactions = Arrays.asList(
-                new ParkingTransaction("Gray","ParkingLot1","1A1"),
-                new ParkingTransaction("Jeanne","ParkingLot2","1A2")
+                new ParkingTransaction("Gray", "ParkingLot1", "1A1"),
+                new ParkingTransaction("Jeanne", "ParkingLot2", "1A2")
         );
 
         PageImpl<ParkingTransaction> parkingTransactions = new PageImpl<>(listOfTransactions);
         when(parkingTransactionRepository.findAll(any(PageRequest.class))).thenReturn(parkingTransactions);
 
-        Page<ParkingTransaction> transactionPage = parkingTransactionService.findAllTransactions(0,5);
+        Page<ParkingTransaction> transactionPage = parkingTransactionService.findAllTransactions(0, 5);
 
         assertThat(transactionPage.getContent(), is(listOfTransactions));
     }
 
     @Test
     public void should_create_receipt_given_transaction_id() {
-        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
 
         when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
 
@@ -120,27 +121,45 @@ public class ParkingTransactionServiceTest {
 
     @Test
     public void should_update_status_to_cancel_when_cancel() throws NotFoundException {
-        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
-        parkingTransaction.setId(1L);
+        long transactionId = 1L;
+
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
+        parkingTransaction.setId(transactionId);
+
         ParkingSpace parkingSpace = new ParkingSpace();
         parkingSpace.setParkingLotName("ParkingLot1");
         parkingSpace.setParkingPosition("1A1");
         parkingSpace.setOccupied(true);
+
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setCapacity(10);
 
         parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
 
-        when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
+        when(parkingTransactionRepository.findById(transactionId)).thenReturn(Optional.of(parkingTransaction));
         when(parkingLotRepository.findByParkingLotName("ParkingLot1")).thenReturn(parkingLot);
-        when(parkingSpaceRepository.findByParkingLotNameAndParkingPosition("ParkingLot1","1A1")).thenReturn(parkingSpace);
+        when(parkingSpaceRepository.findByParkingLotNameAndParkingPosition("ParkingLot1", "1A1")).thenReturn(parkingSpace);
         when(parkingLotRepository.save(parkingLot)).thenReturn(parkingLot);
         when(parkingSpaceRepository.save(parkingSpace)).thenReturn(parkingSpace);
-        when(parkingTransactionService.updateStatusToCancelledWhenCancel(1L)).thenReturn(parkingTransaction);
 
-        assertThat(parkingTransaction.getStatus(), is("Cancelled"));
+        ParkingTransaction updatedTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
+        updatedTransaction.setId(transactionId);
+        updatedTransaction.setStatus("Cancelled");
 
+        when(parkingTransactionRepository.save(any(ParkingTransaction.class)))
+                .thenReturn(parkingTransaction);
+
+        assertThat(parkingTransactionService.updateStatusToCancelledWhenCancel(transactionId).getStatus()
+                , is("Cancelled"));
     }
 
+    @Test
+    public void should_throw_exception_on_missing_parkingTransaction() {
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
+                parkingTransactionService.updateStatusToCancelledWhenCancel(-1L)
+        );
+
+        assertThat(exception.getMessage(), is("No transaction found!"));
+    }
 }
 
