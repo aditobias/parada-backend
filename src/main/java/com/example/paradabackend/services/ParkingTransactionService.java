@@ -111,6 +111,7 @@ public class ParkingTransactionService {
             Integer newCapacity = parkingLot.getCapacity() + 1;
             parkingLot.setCapacity(newCapacity);
             parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setStatus("Closed");
 
             parkingLotRepository.save(parkingLot);
             parkingSpaceRepository.save(parkingSpace);
