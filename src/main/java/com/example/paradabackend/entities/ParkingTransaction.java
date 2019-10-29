@@ -14,9 +14,8 @@ public class ParkingTransaction {
     private String parkingLotName;
     private Integer parkingLevel;
     private String parkingPosition;
-    private Boolean isOccupied;
     private Integer price;
-    private String voided;
+    private String status;
     private Boolean isPaid;
     private Timestamp reserveTime;
     private Timestamp startTime;
@@ -95,28 +94,12 @@ public class ParkingTransaction {
         this.parkingPosition = parkingPosition;
     }
 
-    public Boolean getOccupied() {
-        return isOccupied;
-    }
-
-    public void setOccupied(Boolean occupied) {
-        isOccupied = occupied;
-    }
-
     public Integer getPrice() {
         return price;
     }
 
     public void setPrice(Integer price) {
         this.price = price;
-    }
-
-    public String getVoided() {
-        return voided;
-    }
-
-    public void setVoided(String voided) {
-        this.voided = voided;
     }
 
     public Boolean getIsPaid() {
@@ -137,9 +120,7 @@ public class ParkingTransaction {
                 Objects.equals(parkingLotName, that.parkingLotName) &&
                 Objects.equals(parkingLevel, that.parkingLevel) &&
                 Objects.equals(parkingPosition, that.parkingPosition) &&
-                Objects.equals(isOccupied, that.isOccupied) &&
                 Objects.equals(price, that.price) &&
-                Objects.equals(voided, that.voided) &&
                 Objects.equals(reserveTime, that.reserveTime) &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime) &&
@@ -148,6 +129,14 @@ public class ParkingTransaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, isOccupied, price, voided, reserveTime, startTime, endTime, isPaid);
+        return Objects.hash(id, username, parkingLotName, parkingLevel, parkingPosition, price, reserveTime, startTime, endTime, isPaid);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

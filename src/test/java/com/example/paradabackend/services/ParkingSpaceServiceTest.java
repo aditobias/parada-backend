@@ -99,28 +99,4 @@ class ParkingSpaceServiceTest {
         assertThat(resultingParkingSpaceList, hasSize(parkingSpaceList.size()));
     }
 
-    @Test
-    public void should_update_startTime_when_Payment_is_confirmed () {
-
-        String parkingSpaceID = "PA-1A1";
-        ParkingSpace parkingSpace = new ParkingSpace();
-        ParkingTransaction parkingTransaction = new ParkingTransaction();
-        parkingSpace.setId(parkingSpaceID);
-        parkingSpace.setParkingLotName("ParkingLot1");
-        parkingSpace.setParkingPosition("A1");
-        parkingSpace.setParkingLevel(1);
-
-        parkingSpace.setStartTime(new Timestamp(System.currentTimeMillis()));
-
-        ParkingSpace updatedParkingSpace = new ParkingSpace();
-        updatedParkingSpace.setId("PA-1A1");
-        when(parkingSpaceRepository.findById(eq("PA-1A1"))).thenReturn(Optional.of(parkingSpace));
-        when(parkingTransactionRepository
-                .findByParkingLotNameAndParkingLevelAndParkingPosition("ParkingLot1",
-                        1, "A1")).thenReturn(parkingTransaction);
-        when(parkingSpaceRepository.save(any())).thenReturn(updatedParkingSpace);
-        when(parkingTransactionRepository.save(any())).thenReturn(parkingTransaction);
-
-        assertThat(updatedParkingSpace, is(parkingSpaceService.updateStartTimeWhenPaid(parkingSpaceID)));
-    }
 }
