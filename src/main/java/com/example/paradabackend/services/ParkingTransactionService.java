@@ -43,6 +43,7 @@ public class ParkingTransactionService {
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingLotName);
             parkingTransaction.setPrice(parkingLot.getFlatRate());
             parkingTransaction.setReserveTime(new Timestamp(System.currentTimeMillis()));
+            parkingTransaction.setStatus("Reserved");
 
             return parkingTransactionRepository.save(parkingTransaction);
         }
