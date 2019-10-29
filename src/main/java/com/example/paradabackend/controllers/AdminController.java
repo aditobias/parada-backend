@@ -1,6 +1,8 @@
 package com.example.paradabackend.controllers;
 
+import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.entities.ParkingTransaction;
+import com.example.paradabackend.services.DriverService;
 import com.example.paradabackend.services.ParkingTransactionService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class AdminController {
 
     @Autowired
     ParkingTransactionService parkingTransactionService;
+
+    @Autowired
+    DriverService driverService;
 
     @GetMapping(path = "/transaction/{transactionId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
@@ -32,5 +37,17 @@ public class AdminController {
     @ResponseStatus(code = HttpStatus.OK)
     public ParkingTransaction updateTransactionWhenExit(@PathVariable Long transactionId) throws NotFoundException {
         return parkingTransactionService.updateSpecificTransactionExit(transactionId);
+    }
+
+    @PatchMapping(path = "/driver/toAdmin/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Driver updateDriverAccess(@PathVariable String username) throws NotFoundException {
+        return driverService.updateDriverAccessToAdmin(username);
+    }
+
+    @PatchMapping(path = "/driver/toUser/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public Driver updateDriverAcessToUser(@PathVariable String username) throws NotFoundException {
+        return driverService.updateDriverAccessToUser(username);
     }
 }
