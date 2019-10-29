@@ -111,7 +111,11 @@ public class ParkingTransactionService {
             parkingLot.setCapacity(newCapacity);
             parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
 
-        }
+            parkingLotRepository.save(parkingLot);
+            parkingSpaceRepository.save(parkingSpace);
+            parkingTransactionRepository.save(parkingTransaction);
 
+        }
+    return parkingTransaction;
     }
 }
