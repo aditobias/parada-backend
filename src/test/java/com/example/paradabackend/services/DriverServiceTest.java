@@ -137,6 +137,17 @@ public class DriverServiceTest {
     }
 
     @Test
+    public void should_throw_exception_when_Type_is_empty() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+        {
+            Driver driver = createDriver();
+            driver.setType("");
+            driverService.save(driver);
+        });
+        assertThat(exception.getMessage(), is("Type cannot be empty"));
+    }
+
+    @Test
     public void should_throw_exception_when_driver_already_exists() {
         Driver myDriver = createDriver();
         myDriver.setUsername("zk");
@@ -204,6 +215,8 @@ public class DriverServiceTest {
         driver.setMobileNumber("09123456789");
         driver.setEmailVerificationStatus("True");
         driver.setProfilePicture("www.google.com");
+
+        driver.setType("user");
 
         return driver;
     }
