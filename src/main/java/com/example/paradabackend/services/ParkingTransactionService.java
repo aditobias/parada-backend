@@ -130,8 +130,8 @@ public class ParkingTransactionService {
             parkingSpace.setOccupied(true);
 
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
-            Integer newCapacity = parkingLot.getCapacity() + 1;
-            parkingLot.setCapacity(newCapacity);
+            Integer newAvailableSpaces = parkingLot.getAvailableSpaces() + 1;
+            parkingLot.setAvailableSpaces(newAvailableSpaces);
             parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
             parkingTransaction.setStatus("Cancelled");
 
