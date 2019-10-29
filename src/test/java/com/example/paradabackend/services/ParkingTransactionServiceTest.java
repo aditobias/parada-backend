@@ -7,8 +7,7 @@ import com.example.paradabackend.entities.ParkingTransaction;
 import com.example.paradabackend.repositories.ParkingLotRepository;
 import com.example.paradabackend.repositories.ParkingSpaceRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
+import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -117,5 +117,30 @@ public class ParkingTransactionServiceTest {
 
         assertThat(exception.getMessage(), is("No transaction found!"));
     }
+
+    @Test
+    public void should_update_status_to_cancel_when_cancel() throws NotFoundException {
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray","ParkingLot1","1A1");
+        parkingTransaction.setId(1L);
+        ParkingSpace parkingSpace = new ParkingSpace();
+        parkingSpace.setParkingLotName("ParkingLot1");
+        parkingSpace.setParkingPosition("1A1");
+        parkingSpace.setOccupied(true);
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.setCapacity(10);
+
+        parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
+
+        when(parkingTransactionRepository.findById(1L)).thenReturn(Optional.of(parkingTransaction));
+        when(parkingLotRepository.findByParkingLotName("ParkingLot1")).thenReturn(parkingLot);
+        when(parkingSpaceRepository.findByParkingLotNameAndParkingPosition("ParkingLot1","1A1")).thenReturn(parkingSpace);
+        when(parkingLotRepository.save(parkingLot)).thenReturn(parkingLot);
+        when(parkingSpaceRepository.save(parkingSpace)).thenReturn(parkingSpace);
+        when(parkingTransactionService.updateStatusToCancelledWhenCancel(1L)).thenReturn(parkingTransaction);
+
+        assertThat(parkingTransaction.getStatus(), is("Cancelled"));
+
+    }
+
 }
 

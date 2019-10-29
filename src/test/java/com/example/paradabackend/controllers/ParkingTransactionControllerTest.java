@@ -25,8 +25,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -126,5 +125,25 @@ public class ParkingTransactionControllerTest {
             .andExpect(jsonPath("$.parkingTransaction.parkingLotName", is("ParkingLot1")))
             .andExpect(jsonPath("$.parkingTransaction.parkingPosition", is("1A1")))
         ;
+    }
+
+    @Test
+    void should_update_status_to_cancelled () throws Exception {
+
+        ParkingTransaction parkingTransaction =  new ParkingTransaction("Gray","ParkingLot1","1A1");
+        parkingTransaction.setStatus("Cancelled");
+
+        when(parkingTransactionService.updateStatusToCancelledWhenCancel(1L)).thenReturn(parkingTransaction);
+
+        ResultActions result = mvc.perform(patch("/parkingLots/ParkingLot1/transactions/{transactionId}/cancel", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(parkingTransaction)));
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.username", is("Gray")))
+                .andExpect(jsonPath("$.parkingLotName", is("ParkingLot1")))
+                .andExpect(jsonPath("$.parkingPosition", is("1A1")))
+                .andExpect(jsonPath("$.status", is("Cancelled")));
     }
 }
