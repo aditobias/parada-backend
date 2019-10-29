@@ -8,8 +8,6 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 @Service
 public class DriverService {
     @Autowired
@@ -35,7 +33,7 @@ public class DriverService {
         requireNotNullOrEmpty(driver.getLastName(), "Last name cannot be empty");
         requireNotNullOrEmpty(driver.getEmail(), "Email cannot be empty");
         requireNotNullOrEmpty(driver.getMobileNumber(), "Mobile number cannot be empty");
-        requireNotNullOrEmpty(driver.getType(), "Type cannot be empty");
+        requireNotNullOrEmpty(driver.getDriverType(), "Driver type cannot be empty");
 
 //        requireNotNullOrEmpty(driver.getEmailVerificationStatus(), "Email verification status cannot be empty");
 //        requireNotNullOrEmpty(driver.getProfilePicture(), "Profile picture cannot be empty");
