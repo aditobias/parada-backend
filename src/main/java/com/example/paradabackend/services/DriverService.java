@@ -35,7 +35,6 @@ public class DriverService {
         requireNotNullOrEmpty(driver.getMobileNumber(), "Mobile number cannot be empty");
 //        requireNotNullOrEmpty(driver.getDriverType(), "Driver type cannot be empty");
 
-//        requireNotNullOrEmpty(driver.getEmailVerificationStatus(), "Email verification status cannot be empty");
 //        requireNotNullOrEmpty(driver.getProfilePicture(), "Profile picture cannot be empty");
 
         Driver existingDriver = driverRepository.findByUsername(driver.getUsername());

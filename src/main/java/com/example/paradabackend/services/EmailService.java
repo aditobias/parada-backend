@@ -41,12 +41,12 @@ public class EmailService {
         return message;
     }
 
-    public void updateToIsVerified(String generatedKey)  throws NotFoundException  {
+    public Driver updateToIsVerified(String generatedKey)  throws NotFoundException  {
         Driver foundDriver = driverRepository.findByVerificationKey(generatedKey);
         if(foundDriver == null) {
             throw new NotFoundException("No generated security key.");
         }
         foundDriver.setVerified(true);
-        driverRepository.save(foundDriver);
+        return driverRepository.save(foundDriver);
     }
 }

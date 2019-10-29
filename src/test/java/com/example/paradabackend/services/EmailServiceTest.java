@@ -71,7 +71,7 @@ public class EmailServiceTest {
     }
 
     @Test
-    public void should_update_to_is_verified() {
+    public void should_update_to_is_verified() throws NotFoundException {
         UUID uuid = UUID.randomUUID();
         String generatedSecurityKey = uuid.toString();
 
@@ -88,6 +88,6 @@ public class EmailServiceTest {
 
         when(driverRepository.save(any(Driver.class))).thenReturn(savedDriver);
 
-        assertThat(savedDriver, is(foundDriver));
+        assertThat(emailService.updateToIsVerified(generatedSecurityKey).getVerified(), is(true));
     }
 }
