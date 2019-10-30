@@ -125,7 +125,7 @@ public class ParkingTransactionService {
         ParkingSpace parkingSpace = parkingSpaceRepository
                 .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
                         , parkingTransaction.getParkingPosition());
-        parkingSpace.setOccupied(true);
+        parkingSpace.setOccupied(false);
 
         ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
         Integer newAvailableSpaces = parkingLot.getAvailableSpaces() + 1;
