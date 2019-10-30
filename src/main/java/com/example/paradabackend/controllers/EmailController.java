@@ -18,11 +18,11 @@ public class EmailController {
     @PatchMapping(consumes = {"application/json"})
     @ResponseStatus(code = HttpStatus.OK)
     public String sendEmail(@RequestBody Driver driver) throws NotFoundException {
-        emailService.sendEmail( driver);
+        emailService.sendEmail(driver);
         return "Email sent successfully";
     }
 
-    @RequestMapping(value= "/{generatedKey}")
+    @RequestMapping(value = "/{generatedKey}")
     @ResponseStatus(code = HttpStatus.OK)
     public String updateToIsVerified(@PathVariable String generatedKey) throws NotFoundException {
         emailService.updateToIsVerified(generatedKey);

@@ -8,8 +8,6 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class DriverService {
     @Autowired
@@ -22,14 +20,14 @@ public class DriverService {
         Driver foundDriver = driverRepository
                 .findByUsernameAndPassword(driverCredentials.getUsername(), driverCredentials.getPassword());
 
-        if (foundDriver == null ) {
+        if (foundDriver == null) {
             throw new IllegalArgumentException("Wrong username or password");
         }
         return foundDriver;
     }
 
     public Driver save(Driver driver) {
-        if(isNullOfEmpty(driver.getDriverType())){
+        if (isNullOfEmpty(driver.getDriverType())) {
             driver.setDriverType("user");
         }
 
@@ -51,7 +49,7 @@ public class DriverService {
     }
 
     private void requireNotNullOrEmpty(String field, String errorMessage) {
-        if(isNullOfEmpty(field)){
+        if (isNullOfEmpty(field)) {
             throw new IllegalArgumentException(errorMessage);
         }
     }
@@ -62,7 +60,7 @@ public class DriverService {
 
     public Driver findDriverProfile(String username) throws NotFoundException {
         Driver foundDriver = driverRepository.findByUsername(username);
-        if (foundDriver == null ) {
+        if (foundDriver == null) {
             throw new NotFoundException("No driver profile.");
         }
         return foundDriver;
@@ -71,10 +69,10 @@ public class DriverService {
 
     public Driver editDriverProfile(String username, Driver driver) throws NotFoundException {
         Driver existingDriver = driverRepository.findByUsername(username);
-        if (existingDriver == null ) {
+        if (existingDriver == null) {
             throw new NotFoundException("No driver profile.");
         }
-        
+
         existingDriver.setEmail(driver.getEmail());
         existingDriver.setFirstName(driver.getFirstName());
         existingDriver.setLastName(driver.getLastName());
@@ -87,7 +85,7 @@ public class DriverService {
     public Driver updateDriverAccessToAdmin(String username) throws NotFoundException {
         Driver existingDriver = driverRepository.findByUsername(username);
 
-        if(existingDriver != null){
+        if (existingDriver != null) {
             existingDriver.setDriverType("admin");
 
             return driverRepository.save(existingDriver);
@@ -98,7 +96,7 @@ public class DriverService {
     public Driver updateDriverAccessToUser(String username) throws NotFoundException {
         Driver existingDriver = driverRepository.findByUsername(username);
 
-        if(existingDriver != null){
+        if (existingDriver != null) {
             existingDriver.setDriverType("user");
 
             return driverRepository.save(existingDriver);

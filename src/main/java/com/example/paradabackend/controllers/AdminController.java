@@ -30,7 +30,7 @@ public class AdminController {
     @PatchMapping(path = "/transaction/{transactionId}/enter", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public ParkingTransaction updateTransactionWhenEnter(@PathVariable Long transactionId) throws NotFoundException {
-       return parkingTransactionService.updateSpecificTransactionEnter(transactionId);
+        return parkingTransactionService.updateSpecificTransactionEnter(transactionId);
     }
 
     @PatchMapping(path = "/transaction/{transactionId}/exit", produces = MediaType.APPLICATION_JSON_VALUE)

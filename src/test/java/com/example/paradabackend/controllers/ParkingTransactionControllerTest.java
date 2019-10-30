@@ -54,7 +54,7 @@ public class ParkingTransactionControllerTest {
 
         parkingTransaction.setParkingLotName(parkingLot.getParkingLotName());
 
-        when(parkingTransactionService.addParkingTransaction(eq("parkingLot1") , eq("PL1-1A1") , any())).
+        when(parkingTransactionService.addParkingTransaction(eq("parkingLot1"), eq("PL1-1A1"), any())).
                 thenReturn(parkingTransaction);
 
         ResultActions result = mvc.perform(post("/parkingLots/parkingLot1/transactions/parkingSpace/PL1-1A1")
@@ -86,12 +86,12 @@ public class ParkingTransactionControllerTest {
     @Test
     void should_get_all_transactions() throws Exception {
         List<ParkingTransaction> listOfTransactions = Arrays.asList(
-                new ParkingTransaction("Gray","ParkingLot1","1A1"),
-                new ParkingTransaction("Jeanne","ParkingLot2","1A2")
+                new ParkingTransaction("Gray", "ParkingLot1", "1A1"),
+                new ParkingTransaction("Jeanne", "ParkingLot2", "1A2")
         );
 
         PageImpl<ParkingTransaction> parkingTransactions = new PageImpl<>(listOfTransactions);
-        when(parkingTransactionService.findAllTransactions(0,5)).thenReturn(parkingTransactions);
+        when(parkingTransactionService.findAllTransactions(0, 5)).thenReturn(parkingTransactions);
 
         ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +104,7 @@ public class ParkingTransactionControllerTest {
 
     @Test
     void should_get_transaction_and_return_receipt_when_id_is_specified() throws Exception {
-        ParkingTransaction parkingTransaction =  new ParkingTransaction("Gray","ParkingLot1","1A1");
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setParkingLotName("ParkingLot1");
         ParkingSpace parkingSpace = new ParkingSpace();
@@ -113,24 +113,24 @@ public class ParkingTransactionControllerTest {
         Receipt receipt = new Receipt();
         receipt.setParkingTransaction(parkingTransaction);
 
-        when(parkingTransactionService. createReceiptFromTransactionId(1L)).thenReturn(receipt);
+        when(parkingTransactionService.createReceiptFromTransactionId(1L)).thenReturn(receipt);
 
         ResultActions result = mvc.perform(get("/parkingLots/parkingLot1/transactions/{transactionId}/receipt", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(receipt)));
 
         result.andExpect(status().isOk())
-            .andDo(print())
-            .andExpect(jsonPath("$.parkingTransaction.username", is("Gray")))
-            .andExpect(jsonPath("$.parkingTransaction.parkingLotName", is("ParkingLot1")))
-            .andExpect(jsonPath("$.parkingTransaction.parkingPosition", is("1A1")))
+                .andDo(print())
+                .andExpect(jsonPath("$.parkingTransaction.username", is("Gray")))
+                .andExpect(jsonPath("$.parkingTransaction.parkingLotName", is("ParkingLot1")))
+                .andExpect(jsonPath("$.parkingTransaction.parkingPosition", is("1A1")))
         ;
     }
 
     @Test
-    void should_update_status_to_cancelled () throws Exception {
+    void should_update_status_to_cancelled() throws Exception {
 
-        ParkingTransaction parkingTransaction =  new ParkingTransaction("Gray","ParkingLot1","1A1");
+        ParkingTransaction parkingTransaction = new ParkingTransaction("Gray", "ParkingLot1", "1A1");
         parkingTransaction.setStatus("Cancelled");
 
         when(parkingTransactionService.updateStatusToCancelledWhenCancel(1L)).thenReturn(parkingTransaction);

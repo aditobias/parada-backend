@@ -1,6 +1,9 @@
 package com.example.paradabackend.entities;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -8,7 +11,7 @@ import java.util.Objects;
 public class ParkingTransaction {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
     private String parkingLotName;
@@ -26,7 +29,7 @@ public class ParkingTransaction {
         this.parkingPosition = parkingPosition;
     }
 
-    public ParkingTransaction(){
+    public ParkingTransaction() {
     }
 
     public Timestamp getReserveTime() {

@@ -5,7 +5,6 @@ import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.repositories.DriverRepository;
 import com.example.paradabackend.repositories.ParkingTransactionRepository;
 import javassist.NotFoundException;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +15,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
 public class DriverServiceTest {
@@ -213,7 +211,7 @@ public class DriverServiceTest {
                 driverService.editDriverProfile("zk", new Driver(null)));
     }
 
-    public Driver createDriver(){
+    public Driver createDriver() {
         Driver driver = new Driver("kg96");
         driver.setPassword("password");
         driver.setFirstName("Kenneth");

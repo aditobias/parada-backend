@@ -80,7 +80,7 @@ public class ParkingTransactionService {
     public ParkingTransaction updateSpecificTransactionEnter(Long transactionId) throws NotFoundException {
         ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
 
-        if(!isNull(parkingTransaction)){
+        if (!isNull(parkingTransaction)) {
             parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
             parkingTransaction.setStatus("Paid");
 
@@ -91,7 +91,7 @@ public class ParkingTransactionService {
 
     public ParkingTransaction fetchParkingTransaction(Long transactionId) throws NotFoundException {
         Optional<ParkingTransaction> parkingTransaction = parkingTransactionRepository.findById(transactionId);
-        if(parkingTransaction.isPresent()){
+        if (parkingTransaction.isPresent()) {
             return parkingTransaction.get();
         }
 
@@ -100,7 +100,7 @@ public class ParkingTransactionService {
 
     public ParkingTransaction updateSpecificTransactionExit(Long transactionId) throws NotFoundException {
         ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
-        if(!isNull(parkingTransaction)){
+        if (!isNull(parkingTransaction)) {
             ParkingSpace parkingSpace = parkingSpaceRepository
                     .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
                             , parkingTransaction.getParkingPosition());
@@ -117,7 +117,7 @@ public class ParkingTransactionService {
             parkingTransactionRepository.save(parkingTransaction);
 
         }
-    return parkingTransaction;
+        return parkingTransaction;
     }
 
     public ParkingTransaction updateStatusToCancelledWhenCancel(Long transactionId) throws NotFoundException {

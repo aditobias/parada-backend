@@ -234,8 +234,8 @@ public class ParkingLotServiceTest {
         List<String> actualParkingList = myParkingList.stream().map(ParkingSpace::getId).collect(Collectors.toList());
 
         assertThat(actualParkingList, is(Arrays.asList(
-                    "PLT-1A1"
-                )));
+                "PLT-1A1"
+        )));
     }
 
     @Test

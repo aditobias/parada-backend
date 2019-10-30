@@ -3,7 +3,6 @@ package com.example.paradabackend.controllers;
 import com.example.paradabackend.entities.Driver;
 import com.example.paradabackend.services.DriverService;
 import com.example.paradabackend.services.EmailService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -85,7 +84,6 @@ public class EmailControllerTest {
                 .andExpect(jsonPath("$", is("Email sent successfully")))
         ;
     }
-
 
 
 }

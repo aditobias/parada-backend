@@ -1,7 +1,6 @@
 package com.example.paradabackend.handlers;
 
 import javassist.NotFoundException;
-import org.jboss.jandex.Index;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

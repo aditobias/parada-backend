@@ -2,7 +2,6 @@ package com.example.paradabackend.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -20,7 +19,7 @@ public class ParkingSpace {
         return id;
     }
 
-    public void setId(String id ) {
+    public void setId(String id) {
         this.id = id;
     }
 

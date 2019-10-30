@@ -34,13 +34,13 @@ public class DriverController {
         return driverService.save(driver);
     }
 
-    @GetMapping(value="/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public Driver getDriversProfile(@PathVariable String username) throws NotFoundException {
         return driverService.findDriverProfile(username);
     }
 
-    @GetMapping(value="/{username}/parking_transaction",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{username}/parking_transaction", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public List<ParkingTransaction> getDriversAllTransaction(@PathVariable String username) throws NotFoundException {
         return parkingTransactionService.findAllByUsername(username);
