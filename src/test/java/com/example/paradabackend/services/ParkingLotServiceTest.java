@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class ParkingLotServiceTest {
+
+    private static final int MAX_PARKING_ROW = 26;
 
     @Autowired
     private ParkingLotService parkingLotService;
@@ -115,6 +118,8 @@ public class ParkingLotServiceTest {
     @Test
     void should_generate_parking_spaces_when_given_parking_lot_capacity() throws Exception {
         ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+        myParkingLot.setCapacity(2);
+        myParkingLot.setMaxSpacePerLevel(1);
 
         when(parkingLotRepository.save(myParkingLot)).thenReturn(myParkingLot);
 
@@ -185,12 +190,75 @@ public class ParkingLotServiceTest {
                 "D1")));
     }
 
+    @Test
+    void should_generate_parking_space() {
+        String parkingLotName = "ParkingLot Test";
+
+        ParkingLot myParkingLot = new ParkingLot();
+        myParkingLot.setParkingLotName(parkingLotName);
+
+        ParkingSpace actualParkingSpace = parkingLotService.generateParkingSpace(myParkingLot, MAX_PARKING_ROW, 9);
+
+        ParkingSpace expectedParkingSpace = new ParkingSpace();
+        expectedParkingSpace.setId("PLT-26Z9");
+        expectedParkingSpace.setParkingLotName(parkingLotName);
+        expectedParkingSpace.setParkingPosition("Z9");
+        expectedParkingSpace.setParkingLevel(26);
+        expectedParkingSpace.setOccupied(false);
+
+        assertThat(actualParkingSpace, is(expectedParkingSpace));
+    }
+
+    @Test
+    void should_throw_exception_generate_parking_space_when_max_row_is_greater_than_26() {
+        String parkingLotName = "ParkingLot Test";
+
+        ParkingLot myParkingLot = new ParkingLot();
+        myParkingLot.setParkingLotName(parkingLotName);
+        myParkingLot.setMaxSpacePerLevel(26);
+
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () ->
+                parkingLotService.generateParkingSpace(myParkingLot, 27, 9));
+
+        assertThat(exception.getMessage(), is("Parking Level input cannot be greater than 26."));
+    }
+
+    @Test
+    void should_generate_total_parking_space() {
+        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+        myParkingLot.setCapacity(1);
+        myParkingLot.setMaxSpacePerLevel(1);
+        List<ParkingSpace> myParkingList = new ArrayList<>();
+
+        parkingLotService.generateTotalParkingSpace(myParkingLot, myParkingList);
+        List<String> actualParkingList = myParkingList.stream().map(ParkingSpace::getId).collect(Collectors.toList());
+
+        assertThat(actualParkingList, is(Arrays.asList(
+                    "PLT-1A1"
+                )));
+    }
+
+    @Test
+    void should_generate_additional_parking_space() {
+        ParkingLot myParkingLot = dummyParkingLot("ParkingLot Test");
+        myParkingLot.setCapacity(10);
+        myParkingLot.setMaxSpacePerLevel(3);
+        List<ParkingSpace> myParkingList = new ArrayList<>();
+
+        parkingLotService.generateAdditionalParkingSpace(myParkingLot, myParkingList);
+        List<String> actualParkingList = myParkingList.stream().map(ParkingSpace::getId).collect(Collectors.toList());
+
+        assertThat(actualParkingList, is(Arrays.asList(
+                "PLT-4D1"
+        )));
+    }
+
     private ParkingLot dummyParkingLot(String parkingLotName) {
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setParkingLotName(parkingLotName);
         parkingLot.setLocation("Manila");
-        parkingLot.setCapacity(2);
-        parkingLot.setMaxSpacePerLevel(1);
+        parkingLot.setCapacity(5);
+        parkingLot.setMaxSpacePerLevel(5);
         parkingLot.setFlatRate(50);
         parkingLot.setRatePerHour(50);
         parkingLot.setSucceedingHourRate(15);
