@@ -15,11 +15,10 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @PatchMapping(consumes = {"application/json"})
+    @PatchMapping(value = "/driver/{driverUserName}")
     @ResponseStatus(code = HttpStatus.OK)
-    public String sendEmail(@RequestBody Driver driver) throws NotFoundException {
-        emailService.sendEmail(driver);
-        return "Email sent successfully";
+    public void sendEmail(@PathVariable String driverUserName) throws NotFoundException {
+        emailService.sendEmail(driverUserName);
     }
 
     @RequestMapping(value = "/{generatedKey}")

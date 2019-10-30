@@ -21,28 +21,27 @@ public class EmailService {
     @Autowired
     private DriverService driverService;
 
-    public SimpleMailMessage sendEmail(Driver driver) throws NotFoundException {
+    public void sendEmail (String driverUserName) throws NotFoundException {
         UUID uuid = UUID.randomUUID();
         String generatedSecurityKey = uuid.toString();
 
-        Driver foundDriver = driverService.findDriverProfile(driver.getUsername());
+        Driver foundDriver = driverService.findDriverProfile(driverUserName);
         foundDriver.setVerificationKey(generatedSecurityKey);
         foundDriver.setVerified(false);
         driverRepository.save(foundDriver);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(driver.getEmail());
+        message.setTo(foundDriver.getEmail());
         message.setSubject("Welcome to Parada!");
         message.setText("To confirm your account, please click here : "
                 + "http://10.222.112.155:8080/sendEmail/" + generatedSecurityKey);
         emailSender.send(message);
 
-        return message;
     }
 
     public Driver updateToIsVerified(String generatedKey) throws NotFoundException {
         Driver foundDriver = driverRepository.findByVerificationKey(generatedKey);
-        if (foundDriver == null) {
+        if(foundDriver == null) {
             throw new NotFoundException("No generated security key.");
         }
         foundDriver.setVerified(true);

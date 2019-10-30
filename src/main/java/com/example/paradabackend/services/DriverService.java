@@ -85,7 +85,7 @@ public class DriverService {
     public Driver updateDriverAccessToAdmin(String username) throws NotFoundException {
         Driver existingDriver = driverRepository.findByUsername(username);
 
-        if (existingDriver != null) {
+        if(existingDriver != null){
             existingDriver.setDriverType("admin");
 
             return driverRepository.save(existingDriver);
@@ -96,7 +96,7 @@ public class DriverService {
     public Driver updateDriverAccessToUser(String username) throws NotFoundException {
         Driver existingDriver = driverRepository.findByUsername(username);
 
-        if (existingDriver != null) {
+        if(existingDriver != null){
             existingDriver.setDriverType("user");
 
             return driverRepository.save(existingDriver);
