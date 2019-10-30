@@ -8,6 +8,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DriverService {
     @Autowired
@@ -27,15 +29,18 @@ public class DriverService {
     }
 
     public Driver save(Driver driver) {
+        if(isNullOfEmpty(driver.getDriverType())){
+            driver.setDriverType("user");
+        }
+
+        driver.setVerified(false);
+
         requireNotNullOrEmpty(driver.getUsername(), "Username cannot be empty");
         requireNotNullOrEmpty(driver.getPassword(), "Password cannot be empty");
         requireNotNullOrEmpty(driver.getFirstName(), "First name cannot be empty");
         requireNotNullOrEmpty(driver.getLastName(), "Last name cannot be empty");
         requireNotNullOrEmpty(driver.getEmail(), "Email cannot be empty");
         requireNotNullOrEmpty(driver.getMobileNumber(), "Mobile number cannot be empty");
-//        requireNotNullOrEmpty(driver.getDriverType(), "Driver type cannot be empty");
-
-//        requireNotNullOrEmpty(driver.getEmailVerificationStatus(), "Email verification status cannot be empty");
 //        requireNotNullOrEmpty(driver.getProfilePicture(), "Profile picture cannot be empty");
 
         Driver existingDriver = driverRepository.findByUsername(driver.getUsername());
@@ -46,9 +51,13 @@ public class DriverService {
     }
 
     private void requireNotNullOrEmpty(String field, String errorMessage) {
-        if(field == null || field.isEmpty()){
+        if(isNullOfEmpty(field)){
             throw new IllegalArgumentException(errorMessage);
         }
+    }
+
+    private boolean isNullOfEmpty(String field) {
+        return field == null || field.isEmpty();
     }
 
     public Driver findDriverProfile(String username) throws NotFoundException {
@@ -65,15 +74,35 @@ public class DriverService {
         if (existingDriver == null ) {
             throw new NotFoundException("No driver profile.");
         }
-
-        existingDriver.setUsername(driver.getUsername());
-        existingDriver.setPassword(driver.getPassword());
+        
         existingDriver.setEmail(driver.getEmail());
-        existingDriver.setFirstName(driver.getEmail());
+        existingDriver.setFirstName(driver.getFirstName());
         existingDriver.setLastName(driver.getLastName());
         existingDriver.setMobileNumber(driver.getMobileNumber());
         existingDriver.setProfilePicture(driver.getProfilePicture());
 
         return driverRepository.save(existingDriver);
+    }
+
+    public Driver updateDriverAccessToAdmin(String username) throws NotFoundException {
+        Driver existingDriver = driverRepository.findByUsername(username);
+
+        if(existingDriver != null){
+            existingDriver.setDriverType("admin");
+
+            return driverRepository.save(existingDriver);
+        }
+        throw new NotFoundException("No driver profile");
+    }
+
+    public Driver updateDriverAccessToUser(String username) throws NotFoundException {
+        Driver existingDriver = driverRepository.findByUsername(username);
+
+        if(existingDriver != null){
+            existingDriver.setDriverType("user");
+
+            return driverRepository.save(existingDriver);
+        }
+        throw new NotFoundException("No driver profile");
     }
 }
