@@ -58,7 +58,7 @@ public class EmailServiceTest {
         assertThat(mail.getTo().length, is(1));
         assertThat(mail.getTo()[0], is("m.grayjeanne@gmail.com"));
         assertThat(mail.getSubject(), is("Welcome to Parada!"));
-        assertThat(mail.getText(), containsString("Please use this key for verification! "));
+        assertThat(mail.getText(), containsString("To confirm your account, please click here : http://10.222.112.155:8080/sendEmail"));
     }
 
     @Test
