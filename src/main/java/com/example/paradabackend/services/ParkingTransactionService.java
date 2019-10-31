@@ -81,6 +81,13 @@ public class ParkingTransactionService {
         ParkingTransaction parkingTransaction = fetchParkingTransaction(transactionId);
 
         if (!isNull(parkingTransaction)) {
+            ParkingSpace parkingSpace = parkingSpaceRepository
+                    .findByParkingLotNameAndParkingPosition(parkingTransaction.getParkingLotName()
+                            , parkingTransaction.getParkingPosition());
+
+            ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
+            Integer newAvailableCapacity = parkingLot.getAvailableSpaces() - 1;
+            parkingLot.setAvailableSpaces(newAvailableCapacity);
             parkingTransaction.setStartTime(new Timestamp(System.currentTimeMillis()));
             parkingTransaction.setStatus("Paid");
 
@@ -107,8 +114,8 @@ public class ParkingTransactionService {
             parkingSpace.setOccupied(false);
 
             ParkingLot parkingLot = parkingLotRepository.findByParkingLotName(parkingSpace.getParkingLotName());
-            Integer newCapacity = parkingLot.getCapacity() + 1;
-            parkingLot.setCapacity(newCapacity);
+            Integer newAvailableCapacity = parkingLot.getAvailableSpaces() + 1;
+            parkingLot.setAvailableSpaces(newAvailableCapacity);
             parkingTransaction.setEndTime(new Timestamp(System.currentTimeMillis()));
             parkingTransaction.setStatus("Closed");
 
