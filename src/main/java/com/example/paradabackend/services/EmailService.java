@@ -34,7 +34,7 @@ public class EmailService {
         message.setTo(foundDriver.getEmail());
         message.setSubject("Welcome to Parada!");
         message.setText("To confirm your account, please click here : "
-                + "http://10.222.112.155:8080/sendEmail/" + generatedSecurityKey);
+                + "http://10.222.112.167:8080/sendEmail/" + generatedSecurityKey);
         emailSender.send(message);
 
     }
